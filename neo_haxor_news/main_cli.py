@@ -16,7 +16,7 @@
 
 
 
-from .hacker_news_cli import HackerNewsCli
+from neo_haxor_news.hacker_news_cli import HackerNewsCli
 
 
 def cli():

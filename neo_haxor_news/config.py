@@ -14,7 +14,7 @@
 # language governing permissions and limitations under the License.
 
 
-from __future__ import division
+
 
 import os
 
@@ -22,7 +22,7 @@ import click
 import configparser
 from urllib.request import urlretrieve
 from urllib.error import URLError
-from .settings import freelancer_post_id, who_is_hiring_post_id
+from neo_haxor_news.settings import freelancer_post_id, who_is_hiring_post_id
 
 
 class Config(object):

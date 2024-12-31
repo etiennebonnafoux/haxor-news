@@ -13,7 +13,7 @@
 # ANY KIND, either express or implied. See the License for the specific
 # language governing permissions and limitations under the License.
 
-from .settings import freelancer_post_id, who_is_hiring_post_id
+from neo_haxor_news.settings import freelancer_post_id, who_is_hiring_post_id
 
 
 FREELANCER_POST_ID = str(freelancer_post_id)

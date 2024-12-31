@@ -14,7 +14,7 @@
 # language governing permissions and limitations under the License.
 
 
-from __future__ import division
+
 
 import platform
 import re
@@ -25,11 +25,10 @@ import click
 from urllib.parse import urlparse
 import html as HTMLParser
 
-from .config import Config
-from .lib.haxor.haxor import HackerNewsApi, HTTPError, InvalidItemID, \
-    InvalidUserID
-from .lib.pretty_date_time import pretty_date_time
-from .web_viewer import WebViewer
+from neo_haxor_news.config import Config
+from hacker_news import Haxor, HTTPError, InvalidItemID,InvalidUserID
+from neo_haxor_news.lib.pretty_date_time import pretty_date_time
+from neo_haxor_news.web_viewer import WebViewer
 
 
 class HackerNews(object):
@@ -75,7 +74,7 @@ class HackerNews(object):
     QUERY_UNSEEN = '\[!\]'
 
     def __init__(self):
-        self.hacker_news_api = HackerNewsApi()
+        self.hacker_news_api = Haxor()
         self.html = HTMLParser
         self.config = Config()
         self.web_viewer = WebViewer()

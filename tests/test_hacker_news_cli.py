@@ -14,7 +14,7 @@
 # language governing permissions and limitations under the License.
 
 
-from __future__ import division
+
 
 import mock
 import unittest

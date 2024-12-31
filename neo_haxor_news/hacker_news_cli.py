@@ -14,11 +14,11 @@
 # language governing permissions and limitations under the License.
 
 
-from __future__ import division
+
 
 import click
 
-from .hacker_news import HackerNews
+from neo_haxor_news.hacker_news import HackerNews
 
 
 pass_hacker_news = click.make_pass_decorator(HackerNews)

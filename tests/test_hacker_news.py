@@ -14,10 +14,10 @@
 # language governing permissions and limitations under the License.
 
 
-from __future__ import division
+
 
 import mock
-from tests.compat import unittest
+import unittest
 
 from neo_haxor_news.hacker_news import HackerNews
 from tests.data.comment import formatted_comment, formatted_heading, raw_comment

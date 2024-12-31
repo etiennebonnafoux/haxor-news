@@ -22,7 +22,7 @@ import re
 import shlex
 from prompt_toolkit.completion import Completion
 
-from .completions import META_LOOKUP
+from neo_haxor_news.completions import META_LOOKUP
 
 
 class TextUtils(object):

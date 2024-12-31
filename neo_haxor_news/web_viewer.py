@@ -17,8 +17,8 @@
 
 import re
 
-from .compat import HTMLParser
-from .lib.html2text.html2text import HTML2Text
+from html import parser
+from neo_haxor_news.lib.html2text.html2text import HTML2Text
 import click
 import requests
 
@@ -34,10 +34,7 @@ class WebViewer(object):
     """
 
     def __init__(self):
-        try:
-            self.html = HTMLParser.HTMLParser()
-        except:
-            self.html = HTMLParser
+        self.html = parser()
         self.html_to_text = None
         self._init_html_to_text()
 

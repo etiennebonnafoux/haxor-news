@@ -1,4 +1,16 @@
 #!/usr/bin/env python
+
+import html.entities as htmlentitydefs
+import urllib.parse as urlparse
+import html.parser as HTMLParser
+import urllib.request as urllib
+import optparse
+import re
+import sys
+import codecs
+
+from textwrap import wrap
+
 """html2text: Turn HTML into equivalent Markdown-structured text."""
 __version__ = "3.200.3"
 __author__ = "Aaron Swartz (me@aaronsw.com)"
@@ -15,25 +27,8 @@ except NameError:
     setattr(__builtins__, 'False', 0)
 
 def has_key(x, y):
-    if hasattr(x, 'has_key'): return x.has_key(y)
-    else: return y in x
+    return x.has_key(y) if hasattr(x, 'has_key') else y in x
 
-try:
-    import htmlentitydefs
-    import urlparse
-    import HTMLParser
-except ImportError: #Python3
-    import html.entities as htmlentitydefs
-    import urllib.parse as urlparse
-    import html.parser as HTMLParser
-try: #Python3
-    import urllib.request as urllib
-except:
-    import urllib
-import optparse, re, sys, codecs, types
-
-try: from textwrap import wrap
-except: pass
 
 # Use Unicode characters instead of their ascii psuedo-replacements
 UNICODE_SNOB = 0
@@ -92,8 +87,8 @@ for k in unifiable.keys():
 def onlywhite(line):
     """Return true if the line does only consist of whitespace characters."""
     for c in line:
-        if c is not ' ' and c is not '  ':
-            return c is ' '
+        if c != ' ' and c != '  ':
+            return c == ' '
     return line
 
 def hn(tag):
@@ -321,8 +316,8 @@ class HTML2Text(HTMLParser.HTMLParser):
 
         # handle Google's text emphasis
         strikethrough =  'line-through' in tag_emphasis and self.hide_strikethrough
-        bold = 'bold' in tag_emphasis and not 'bold' in parent_emphasis
-        italic = 'italic' in tag_emphasis and not 'italic' in parent_emphasis
+        bold = 'bold' in tag_emphasis and  'bold' not in parent_emphasis
+        italic = 'italic' in tag_emphasis and 'italic' not in parent_emphasis
         fixed = google_fixed_width_font(tag_style) and not \
                 google_fixed_width_font(parent_style) and not self.pre
 

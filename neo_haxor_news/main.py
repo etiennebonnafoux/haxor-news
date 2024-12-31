@@ -16,7 +16,7 @@
 
 
 
-from .haxor import Haxor
+from neo_haxor_news.haxor import Haxor
 
 def cli():
     """Creates and calls Haxor."""

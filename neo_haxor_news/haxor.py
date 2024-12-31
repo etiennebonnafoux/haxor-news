@@ -30,12 +30,12 @@ from prompt_toolkit.layout.containers import Window
 from prompt_toolkit.history import FileHistory
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 
-from .__init__ import __version__
-from .completer import Completer
-from .hacker_news_cli import HackerNewsCli
-from .keys import KeyManager
-from .style import StyleFactory
-from .utils import TextUtils
+from neo_haxor_news.__init__ import __version__
+from neo_haxor_news.completer import Completer
+from neo_haxor_news.hacker_news_cli import HackerNewsCli
+from neo_haxor_news.keys import KeyManager
+from neo_haxor_news.style import StyleFactory
+from neo_haxor_news.utils import TextUtils
 
 
 class Haxor(object):
