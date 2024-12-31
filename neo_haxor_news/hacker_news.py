@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright 2015 Donne Martin. All Rights Reserved.
+# Copyright 2024 Bonnafoux Etienne. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License"). You
 # may not use this file except in compliance with the License. A copy of
@@ -13,7 +13,7 @@
 # ANY KIND, either express or implied. See the License for the specific
 # language governing permissions and limitations under the License.
 
-from __future__ import print_function
+
 from __future__ import division
 
 import platform
@@ -22,8 +22,8 @@ import sys
 import webbrowser
 
 import click
-from .compat import HTMLParser
-from .compat import urlparse
+from urllib.parse import urlparse
+import html as HTMLParser
 
 from .config import Config
 from .lib.haxor.haxor import HackerNewsApi, HTTPError, InvalidItemID, \
@@ -77,10 +77,7 @@ class HackerNews(object):
 
     def __init__(self):
         self.hacker_news_api = HackerNewsApi()
-        try:
-            self.html = HTMLParser.HTMLParser()
-        except:
-            self.html = HTMLParser
+        self.html = HTMLParser
         self.config = Config()
         self.web_viewer = WebViewer()
 

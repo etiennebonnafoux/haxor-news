@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright 2015 Donne Martin. All Rights Reserved.
+# Copyright 2024 Bonnafoux Etienne. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License"). You
 # may not use this file except in compliance with the License. A copy of
@@ -14,11 +14,11 @@
 # language governing permissions and limitations under the License.
 
 from __future__ import unicode_literals
-from __future__ import print_function
+from typing import Iterable
+
 
 import re
 
-import six
 import shlex
 from prompt_toolkit.completion import Completion
 
@@ -28,7 +28,8 @@ from .completions import META_LOOKUP
 class TextUtils(object):
     """Utilities for parsing and matching text."""
 
-    def find_matches(self, word, collection, fuzzy):
+    def find_matches(self, word : str, collection : Iterable[str], fuzzy : bool):
+        
         """Find all matches in collection for word.
 
         :type word: str
@@ -159,8 +160,6 @@ class TextUtils(object):
         :rtype: list
         :return: A list that contains words for each split element of text.
         """
-        if six.PY2:
-            text = text.encode('utf-8')
         return shlex.split(text)
 
     def _safe_split(self, text):

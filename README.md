@@ -458,7 +458,7 @@ My contact info can be found on my [GitHub page](https://github.com/donnemartin)
 
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
-    Copyright 2015 Donne Martin
+    Copyright 2024 Bonnafoux Etienne
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

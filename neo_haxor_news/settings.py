@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright 2015 Donne Martin. All Rights Reserved.
+# Copyright 2024 Bonnafoux Etienne. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License"). You
 # may not use this file except in compliance with the License. A copy of
@@ -13,4 +13,6 @@
 # ANY KIND, either express or implied. See the License for the specific
 # language governing permissions and limitations under the License.
 
-__version__ = '0.4.2'
+# Updated monthly, see HackerNewsCli.hiring docstring.
+who_is_hiring_post_id = 26661443
+freelancer_post_id = 26661442

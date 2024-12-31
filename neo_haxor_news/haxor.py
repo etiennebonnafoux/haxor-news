@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright 2015 Donne Martin. All Rights Reserved.
+# Copyright 2024 Bonnafoux Etienne. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License"). You
 # may not use this file except in compliance with the License. A copy of
@@ -13,7 +13,7 @@
 # ANY KIND, either express or implied. See the License for the specific
 # language governing permissions and limitations under the License.
 
-from __future__ import print_function
+
 
 import os
 import platform
@@ -21,11 +21,12 @@ import subprocess
 import sys
 
 import click
-from prompt_toolkit import AbortAction, Application, CommandLineInterface
+from prompt_toolkit import PromptSession
+from prompt_toolkit.application import Application
 from prompt_toolkit.filters import Always
-from prompt_toolkit.interface import AcceptAction
-from prompt_toolkit.buffer import Buffer
-from prompt_toolkit.shortcuts import create_default_layout, create_eventloop
+from prompt_toolkit import layout
+from prompt_toolkit.layout import Layout
+from prompt_toolkit.layout.containers import Window
 from prompt_toolkit.history import FileHistory
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 
@@ -34,7 +35,6 @@ from .completer import Completer
 from .hacker_news_cli import HackerNewsCli
 from .keys import KeyManager
 from .style import StyleFactory
-from .toolbar import Toolbar
 from .utils import TextUtils
 
 
@@ -134,36 +134,46 @@ class Haxor(object):
             set_paginate_comments, lambda: self.paginate_comments)
 
     def _create_cli(self):
-        """Create the prompt_toolkit's CommandLineInterface."""
+        """Create the prompt_toolkit session and application."""
         history = FileHistory(os.path.expanduser('~/.haxornewshistory'))
-        toolbar = Toolbar(lambda: self.paginate_comments)
-        layout = create_default_layout(
-            message=u'haxor> ',
-            reserve_space_for_menu=8,
-            get_bottom_toolbar_tokens=toolbar.handler,
+        
+        kb = self._create_key_manager()
+        
+        def get_bottom_toolbar():
+            return f"{'Paginate comments: ON' if self.paginate_comments else 'Paginate comments: OFF'}"
+        
+        my_layout = Layout(
+            Window(
+                height=1,
+                content=layout.FormattedTextControl('haxor> '),
+            )
         )
-        cli_buffer = Buffer(
+        
+        style_factory = StyleFactory(self.theme)
+        self.app = Application(
+            layout=my_layout,
+            full_screen=True,
+            key_bindings=kb,
+            style=style_factory.style,
+            mouse_support=False,
+            bottom_toolbar=get_bottom_toolbar,
+            ignore_case=True
+        )
+        
+        self.session = PromptSession(
             history=history,
             auto_suggest=AutoSuggestFromHistory(),
             enable_history_search=True,
             completer=self.completer,
             complete_while_typing=Always(),
-            accept_action=AcceptAction.RETURN_DOCUMENT)
-        self.key_manager = self._create_key_manager()
-        style_factory = StyleFactory(self.theme)
-        application = Application(
-            mouse_support=False,
+            key_bindings=kb,
             style=style_factory.style,
-            layout=layout,
-            buffer=cli_buffer,
-            key_bindings_registry=self.key_manager.manager.registry,
-            on_exit=AbortAction.RAISE_EXCEPTION,
-            on_abort=AbortAction.RETRY,
-            ignore_case=True)
-        eventloop = create_eventloop()
-        self.cli = CommandLineInterface(
-            application=application,
-            eventloop=eventloop)
+            bottom_toolbar=get_bottom_toolbar,
+            message='haxor> '
+        )
+        
+
+        self.cli = self.session
 
     def _add_comment_pagination(self, document_text):
         """Add the command to enable comment pagination where applicable.

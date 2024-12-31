@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright 2015 Donne Martin. All Rights Reserved.
+# Copyright 2024 Bonnafoux Etienne. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License"). You
 # may not use this file except in compliance with the License. A copy of
@@ -13,14 +13,14 @@
 # ANY KIND, either express or implied. See the License for the specific
 # language governing permissions and limitations under the License.
 
-from __future__ import print_function
+
 from __future__ import division
 
 import mock
 import os
 from tests.compat import unittest
 
-from haxor_news.hacker_news import HackerNews
+from neo_haxor_news.hacker_news import HackerNews
 from tests.mock_hacker_news_api import MockHackerNewsApi
 
 
