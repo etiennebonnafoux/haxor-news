@@ -6,7 +6,7 @@ from neo_haxor_news.hacker_news import HackerNews
 pass_hacker_news = click.make_pass_decorator(HackerNews)
 
 
-class HackerNewsCli(object):
+class HackerNewsCli:
     """Encapsulate the Hacker News Command Line Interface."""
 
     @click.group()

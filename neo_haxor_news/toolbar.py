@@ -1,7 +1,7 @@
 from pygments.token import Token
 
 
-class Toolbar(object):
+class Toolbar:
     """Show information about the aws-shell in a tool bar.
 
     :type handler: callable

@@ -9,7 +9,7 @@ import click
 import requests
 
 
-class WebViewer(object):
+class WebViewer:
     """Handle viewing of web content within the terminal.
 
     :type html: :class:`HTMLParser.HTMLParser`

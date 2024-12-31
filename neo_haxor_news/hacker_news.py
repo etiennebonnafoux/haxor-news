@@ -8,12 +8,17 @@ from urllib.parse import urlparse
 import html as HTMLParser
 
 from neo_haxor_news.config import Config
-from hacker_news import Haxor, HTTPError, InvalidItemID, InvalidUserID
+from hackernews import (
+    HackerNews as ImportHackerNews,
+    HTTPError,
+    InvalidItemID,
+    InvalidUserID,
+)
 from neo_haxor_news.pretty_date_time import pretty_date_time
 from neo_haxor_news.web_viewer import WebViewer
 
 
-class HackerNews(object):
+class HackerNews:
     """Encapsulate Hacker News.
 
     :type COMMENT_INDENT: str (const)
@@ -56,7 +61,7 @@ class HackerNews(object):
     QUERY_UNSEEN = "\[!\]"
 
     def __init__(self):
-        self.hacker_news_api = Haxor()
+        self.hacker_news_api = ImportHackerNews()
         self.html = HTMLParser
         self.config = Config()
         self.web_viewer = WebViewer()

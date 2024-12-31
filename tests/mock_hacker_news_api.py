@@ -1,7 +1,7 @@
 from hackernews import InvalidItemID, InvalidUserID
 
 
-class MockItem(object):
+class MockItem:
     def __init__(self):
         self.item_id = None
         self.by = None
@@ -14,7 +14,7 @@ class MockItem(object):
         self.descendants = None
 
 
-class MockUser(object):
+class MockUser:
     def __init__(self):
         self.user_id = None
         self.created = None
@@ -22,7 +22,7 @@ class MockUser(object):
         self.submitted = None
 
 
-class MockHackerNewsApi(object):
+class MockHackerNewsApi:
     def __init__(self):
         self.items = self._generate_mock_items()
         self.users = self._generate_mock_users()

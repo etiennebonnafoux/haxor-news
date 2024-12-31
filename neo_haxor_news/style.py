@@ -1,25 +1,9 @@
-# -*- coding: utf-8
-
-# Copyright 2024 Bonnafoux Etienne. All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License"). You
-# may not use this file except in compliance with the License. A copy of
-# the License is located at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# or in the "license" file accompanying this file. This file is
-# distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
-# ANY KIND, either express or implied. See the License for the specific
-# language governing permissions and limitations under the License.
-
-from pygments.token import Token
 from pygments.util import ClassNotFound
 from prompt_toolkit.styles import Style
 import pygments.styles
 
 
-class StyleFactory(object):
+class StyleFactory:
     """Provide styles for the autocomplete menu and the toolbar.
 
     :type style: :class:`pygments.style.StyleMeta`
@@ -48,25 +32,28 @@ class StyleFactory(object):
         # Create styles dictionary.
         styles = {}
         styles.update(style.styles)
-        styles.update(
-            {
-                Token.Menu.Completions.Completion.Current: "bg:#00aaaa #000000",
-                Token.Menu.Completions.Completion: "bg:#008888 #ffffff",
-                Token.Menu.Completions.Meta.Current: "bg:#00aaaa #000000",
-                Token.Menu.Completions.Meta: "bg:#00aaaa #ffffff",
-                Token.Menu.Completions.ProgressButton: "bg:#003333",
-                Token.Menu.Completions.ProgressBar: "bg:#00aaaa",
-                Token.Scrollbar: "bg:#00aaaa",
-                Token.Scrollbar.Button: "bg:#003333",
-                Token.Toolbar: "bg:#222222 #cccccc",
-                Token.Toolbar.Off: "bg:#222222 #696969",
-                Token.Toolbar.On: "bg:#222222 #ffffff",
-                Token.Toolbar.Search: "noinherit bold",
-                Token.Toolbar.Search.Text: "nobold",
-                Token.Toolbar.System: "noinherit bold",
-                Token.Toolbar.Arg: "noinherit bold",
-                Token.Toolbar.Arg.Text: "nobold",
-            }
-        )
+        custom_styles = {
+            # Completion menu styles
+            'completion-menu.completion.current': 'bg:#00aaaa #000000',
+            'completion-menu.completion': 'bg:#008888 #ffffff',
+            'completion-menu.meta.completion.current': 'bg:#00aaaa #000000',
+            'completion-menu.meta.completion': 'bg:#00aaaa #ffffff',
+            'completion-menu.progress-button': 'bg:#003333',
+            'completion-menu.progress-bar': 'bg:#00aaaa',
+            
+            # Scrollbar styles
+            'scrollbar': 'bg:#00aaaa',
+            'scrollbar.button': 'bg:#003333',
+            
+            # Toolbar styles
+            'bottom-toolbar': 'bg:#222222 #cccccc',
+            'bottom-toolbar.off': 'bg:#222222 #696969',
+            'bottom-toolbar.on': 'bg:#222222 #ffffff',
+            'bottom-toolbar.search': 'bold',
+            'bottom-toolbar.search.text': 'noinherit nobold',
+            'bottom-toolbar.system': 'bold',
+            'bottom-toolbar.arg': 'bold',
+            'bottom-toolbar.arg.text': 'noinherit nobold',
+        }
 
-        return Style.from_dict(styles)
+        return Style.from_dict(custom_styles)

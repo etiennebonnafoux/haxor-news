@@ -2,7 +2,7 @@ from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.keys import Keys
 
 
-class KeyManager(object):
+class KeyManager:
     """A custom :class:`prompt_toolkit.KeyBindingManager`.
 
     Handle togging of:
@@ -34,14 +34,9 @@ class KeyManager(object):
         """
         assert callable(set_paginate_comments)
         assert callable(get_paginate_comments)
-        self.manager = KeyBindings(
-            enable_search=True,
-            enable_abort_and_exit_bindings=True,
-            enable_system_bindings=True,
-            enable_auto_suggest_bindings=True,
-        )
+        self.manager = KeyBindings()
 
-        @self.manager.registry.add_binding(Keys.F2)
+        @self.manager.add(Keys.F2)
         def handle_f2(_):
             """Enable/Disable paginate comments mode.
 
@@ -55,7 +50,7 @@ class KeyManager(object):
             # set_paginate_comments(not get_paginate_comments())
             pass
 
-        @self.manager.registry.add_binding(Keys.F10)
+        @self.manager.add(Keys.F10)
         def handle_f10(_):
             """Quit when the `F10` key is pressed.
 
@@ -66,7 +61,7 @@ class KeyManager(object):
             """
             raise EOFError
 
-        @self.manager.registry.add_binding(Keys.ControlSpace)
+        @self.manager.add(Keys.ControlSpace)
         def handle_ctrl_space(event):
             """Initialize autocompletion at the cursor.
 

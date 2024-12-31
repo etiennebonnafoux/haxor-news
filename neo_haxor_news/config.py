@@ -7,7 +7,7 @@ from urllib.error import URLError
 from neo_haxor_news.settings import freelancer_post_id, who_is_hiring_post_id
 
 
-class Config(object):
+class Config:
     """Hacker News config.
 
     :type clr_x: str

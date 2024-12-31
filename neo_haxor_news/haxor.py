@@ -21,7 +21,7 @@ from neo_haxor_news.style import StyleFactory
 from neo_haxor_news.utils import TextUtils
 
 
-class Haxor(object):
+class Haxor:
     """Encapsulate the Hacker News CLI.
 
     :type cli: :class:`prompt_toolkit.CommandLineInterface`
@@ -137,8 +137,6 @@ class Haxor(object):
             key_bindings=kb,
             style=style_factory.style,
             mouse_support=False,
-            bottom_toolbar=get_bottom_toolbar,
-            ignore_case=True,
         )
 
         self.session = PromptSession(

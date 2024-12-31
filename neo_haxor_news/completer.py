@@ -1,6 +1,3 @@
-from __future__ import unicode_literals
-
-
 from prompt_toolkit.completion import Completer as ClCompleter
 
 from neo_haxor_news.completions import SUBCOMMANDS, ARGS_OPTS_LOOKUP

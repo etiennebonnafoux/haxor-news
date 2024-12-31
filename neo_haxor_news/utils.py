@@ -1,4 +1,3 @@
-from __future__ import unicode_literals
 from typing import Iterable
 
 
@@ -10,7 +9,7 @@ from prompt_toolkit.completion import Completion
 from neo_haxor_news.completions import META_LOOKUP
 
 
-class TextUtils(object):
+class TextUtils:
     """Utilities for parsing and matching text."""
 
     def find_matches(self, word: str, collection: Iterable[str], fuzzy: bool):

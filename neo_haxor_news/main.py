@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-
-
 from neo_haxor_news.haxor import Haxor
 
 
