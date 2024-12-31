@@ -5,10 +5,12 @@ import webbrowser
 
 import click
 from urllib.parse import urlparse
-import html as HTMLParser
+from html import unescape
+from typing import Iterable
 
 from neo_haxor_news.config import Config
 from hackernews import (
+    Item,
     HackerNews as ImportHackerNews,
     HTTPError,
     InvalidItemID,
@@ -62,58 +64,57 @@ class HackerNews:
 
     def __init__(self):
         self.hacker_news_api = ImportHackerNews()
-        self.html = HTMLParser
         self.config = Config()
         self.web_viewer = WebViewer()
 
-    def ask(self, limit):
+    def ask(self, limit: int):
         """Display Ask HN posts.
 
-        :type limit: int
-        :param limit: the number of items to show, optional, defaults to 10.
+        Args:
+            limit (int): the number of items to show, optional, defaults to 10.
         """
+
         self.print_items(
-            message=self.headlines_message("Ask HN"),
             item_ids=self.hacker_news_api.ask_stories(limit),
         )
 
-    def best(self, limit):
+    def best(self, limit: int):
         """Display best posts.
 
-        :type limit: int
-        :param limit: the number of items to show, optional, defaults to 10.
+        Args:
+            limit (int): the number of items to show, optional, defaults to 10.
         """
+
         self.print_items(
-            message=self.headlines_message("Best"),
-            item_ids=self.hacker_news_api.best_stories(limit),
+            item_ids=self.hacker_news_api.top_stories(limit),
         )
 
-    def headlines_message(self, message):
+    def headlines_message(self, message: str) -> str:
         """Create the "Fetching [message] Headlines..." string.
 
-        :type message: str
-        :param message: The headline message.
+        Args:
+            message (str): he headline message.
 
-        :rtype: str
-        :return: "Fetching [message] Headlines...".
+        Returns:
+            str: "Fetching [message] Headlines...".
         """
-        return "Fetching {0} Headlines...".format(message)
 
-    def hiring_and_freelance(self, regex_query, post_id):
+        return f"Fetching {message} Headlines..."
+
+    def hiring_and_freelance(self, regex_query: str, post_id: int):
         """Display comments matching the monthly who is hiring post.
 
         Searches the monthly Hacker News who is hiring post for comments
         matching the given regex_query.  Defaults to searching the latest
         post based on your installed version of haxor-news.
 
-        :type regex_query: str
-        :param regex_query: The regex query to match.
-
-        :type post_id: int
-        :param post_id: the who is hiring post id.
+        Args:
+            regex_query (str): The regex query to match.
+            post_id (int): the who is hiring post id.
                 Optional, defaults to the latest post based on your installed
                 version of haxor-news.
         """
+
         try:
             item = self.hacker_news_api.get_item(post_id)
             self.print_comments(item, regex_query, comments_hide_non_matching=True)
@@ -130,7 +131,6 @@ class HackerNews:
         :param limit: the number of items to show, optional, defaults to 10.
         """
         self.print_items(
-            message=self.headlines_message("Jobs"),
             item_ids=self.hacker_news_api.job_stories(limit),
         )
 
@@ -141,12 +141,15 @@ class HackerNews:
         :param limit: the number of items to show, optional, defaults to 10.
         """
         self.print_items(
-            message=self.headlines_message("Latest"),
             item_ids=self.hacker_news_api.new_stories(limit),
         )
 
     def print_comment(
-        self, item, regex_query="", comments_hide_non_matching=False, depth=0
+        self,
+        item: Item,
+        regex_query: str = "",
+        comments_hide_non_matching: bool = False,
+        depth: int = 0,
     ):
         """Print the comments for the given item.
 
@@ -198,7 +201,11 @@ class HackerNews:
             click.echo(formatted_comment[0:num_chars] + " [...]", color=True)
 
     def print_comments(
-        self, item, regex_query="", comments_hide_non_matching=False, depth=0
+        self,
+        item: Item,
+        regex_query: str = "",
+        comments_hide_non_matching: bool = False,
+        depth: int = 0,
     ):
         """Recursively print comments and subcomments for the given item.
 
@@ -234,7 +241,9 @@ class HackerNews:
                 click.echo("")
                 self.print_item_not_found(comment_id)
 
-    def format_comment(self, item, depth, header_color, header_adornment):
+    def format_comment(
+        self, item: Item, depth: int, header_color: str, header_adornment: str
+    ):
         """Format a given item's comment.
 
         :type item: :class:`haxor.Item`
@@ -263,7 +272,7 @@ class HackerNews:
             ),
             fg=header_color,
         )
-        unescaped_text = self.html.unescape(item.text)
+        unescaped_text = unescape(item.text)
         regex_paragraph = re.compile(r"<p>")
         unescaped_text = regex_paragraph.sub(
             click.style("\n\n" + indent), unescaped_text
@@ -281,7 +290,7 @@ class HackerNews:
         )
         return formatted_heading, formatted_comment
 
-    def format_index_title(self, index, title):
+    def format_index_title(self, index: int, title: str) -> str:
         """Format and item's index and title.
 
         :type index: int
@@ -302,7 +311,7 @@ class HackerNews:
         formatted_index_title += click.style(title + " ", fg=self.config.clr_title)
         return formatted_index_title
 
-    def format_item(self, item, index):
+    def format_item(self, item: Item, index: int) -> str:
         """Format an item.
 
         :type item: :class:`haxor.Item`
@@ -335,7 +344,7 @@ class HackerNews:
         )
         return formatted_item
 
-    def print_item_not_found(self, item_id):
+    def print_item_not_found(self, item_id: int):
         """Print a message the given item id was not found.
 
         :type item_id: int
@@ -343,12 +352,8 @@ class HackerNews:
         """
         click.secho("Item with id {0} not found.".format(item_id), fg="red")
 
-    def print_items(self, message, item_ids):
+    def print_items(self, item_ids: Iterable[Item]):
         """Print the items.
-
-        :type message: str
-        :param message: A message to print out to the user before outputting
-                the results.
 
         :type item_ids: iterable
         :param item_ids: A collection of items to print.
@@ -370,7 +375,7 @@ class HackerNews:
         if self.config.show_tip:
             click.secho(self.tip_view(str(index - 1)))
 
-    def tip_view(self, max_index):
+    def tip_view(self, max_index: str) -> str:
         """Create the tip about the view command.
 
         :type max_index: string
@@ -393,7 +398,7 @@ class HackerNews:
         )
         return tip
 
-    def match_comment_unseen(self, regex_query, header_adornment):
+    def match_comment_unseen(self, regex_query:str, header_adornment:str)-> bool:
         """Determine if a comment is unseen based on the query and header.
 
         :type regex_query: str
@@ -410,7 +415,7 @@ class HackerNews:
         else:
             return False
 
-    def match_regex(self, item, regex_query):
+    def match_regex(self, item:Item, regex_query:str)-> bool:
         """Determine if there is a match with the given regex_query.
 
         :type item: :class:`haxor.Item`
@@ -430,14 +435,13 @@ class HackerNews:
         else:
             return True
 
-    def show(self, limit):
+    def show(self, limit:int):
         """Display Show HN posts.
 
         :type limit: int
         :param limit: the number of items to show, optional, defaults to 10.
         """
         self.print_items(
-            message=self.headlines_message("Show HN"),
             item_ids=self.hacker_news_api.show_stories(limit),
         )
 
@@ -448,7 +452,6 @@ class HackerNews:
         :param limit: the number of items to show, optional, defaults to 10.
         """
         self.print_items(
-            message=self.headlines_message("Top"),
             item_ids=self.hacker_news_api.top_stories(limit),
         )
 
@@ -470,7 +473,7 @@ class HackerNews:
             click.secho(str(user.created), fg=self.config.clr_user)
             click.secho("Karma: ", nl=False, fg=self.config.clr_general)
             click.secho(str(user.karma), fg=self.config.clr_user)
-            self.print_items("User submissions:", user.submitted[0:submission_limit])
+            self.print_items( user.submitted[0:submission_limit])
         except InvalidUserID:
             self.print_item_not_found(user_id)
 

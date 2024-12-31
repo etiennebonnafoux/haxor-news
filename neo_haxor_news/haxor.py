@@ -201,6 +201,6 @@ class Haxor:
         click.echo("Version: " + __version__)
         click.echo("Syntax: hn <command> [params] [options]")
         while True:
-            document = self.cli.run(reset_current_buffer=True)
+            document = self.cli.prompt()
             self.handle_exit(document)
             self.run_command(document)

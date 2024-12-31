@@ -3,9 +3,8 @@
 
 import re
 
-from html import parser
-from neo_haxor_news.lib.html2text.html2text import HTML2Text
 import click
+from markdownify import markdownify as md
 import requests
 
 
@@ -18,22 +17,6 @@ class WebViewer:
     :type html_to_text: :class:`html2text.html2text.HTML2Text`
     :param html_to_text: An instance of `html2text.html2text.HTML2Text`.
     """
-
-    def __init__(self):
-        self.html = parser()
-        self.html_to_text = None
-        self._init_html_to_text()
-
-    def _init_html_to_text(self):
-        """Initialize HTML2Text."""
-        self.html_to_text = HTML2Text()
-        self.html_to_text.body_width = 0
-        self.html_to_text.ignore_images = False
-        self.html_to_text.ignore_emphasis = False
-        self.html_to_text.ignore_links = False
-        self.html_to_text.skip_internal_links = False
-        self.html_to_text.inline_links = False
-        self.html_to_text.links_each_paragraph = False
 
     def format_markdown(self, text):
         """Add color to the input markdown using click.style.
@@ -84,16 +67,14 @@ class WebViewer:
         try:
             headers = {
                 "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36"
-            }  # NOQA
+            } 
             raw_response = requests.get(url, headers=headers)
         except (requests.exceptions.SSLError, requests.exceptions.ConnectionError) as e:
             contents = "Error: " + str(e) + "\n"
             contents += "Try running hn view # with the --browser/-b flag\n"
             return contents
         text = raw_response.text
-        contents = self.html_to_text.handle(text)
-        # Strip out Unicode, which seems to have issues when html2txt is
-        # coupled with click.echo_via_pager.
+        contents = md(text)
         contents = re.sub(r"[^\x00-\x7F]+", "", contents)
         contents = self.format_markdown(contents)
         return contents

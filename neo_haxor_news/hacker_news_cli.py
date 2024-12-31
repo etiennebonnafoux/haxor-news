@@ -3,6 +3,7 @@ import click
 from neo_haxor_news.hacker_news import HackerNews
 
 
+
 pass_hacker_news = click.make_pass_decorator(HackerNews)
 
 
@@ -26,7 +27,7 @@ class HackerNewsCli:
     @cli.command()
     @click.argument("limit", required=False, default=10)
     @pass_hacker_news
-    def ask(hacker_news, limit):
+    def ask(hacker_news , limit ):
         """Display Ask HN posts.
 
         Example(s):

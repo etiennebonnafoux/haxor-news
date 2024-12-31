@@ -1,41 +1,36 @@
 from prompt_toolkit.completion import Completer as ClCompleter
 
 from neo_haxor_news.completions import SUBCOMMANDS, ARGS_OPTS_LOOKUP
-
+from neo_haxor_news.utils import TextUtils
 
 class Completer(ClCompleter):
-    """Completer for haxor-news.
 
-    :type text_utils: :class:`utils.TextUtils`
-    :param text_utils: An instance of `utils.TextUtils`.
+    def __init__(self, fuzzy_match : bool, text_utils : TextUtils):
+        """Completer for haxor-news.
 
-    :type fuzzy_match: bool
-    :param fuzzy_match: Determines whether to use fuzzy matching.
-    """
-
-    def __init__(self, fuzzy_match, text_utils):
+        Args:
+            fuzzy_match (bool): Determines whether to use fuzzy matching.
+            text_utils (TextUtils): An instance of `utils.TextUtils`.
+        """
         self.fuzzy_match = fuzzy_match
         self.text_utils = text_utils
 
-    def completing_command(self, words, word_before_cursor):
+    def completing_command(self, words : list[str], word_before_cursor : str) -> bool:
         """Determine if we are currently completing the hn command.
 
-        :type words: list
-        :param words: The input text broken into word tokens.
-
-        :type word_before_cursor: str
-        :param word_before_cursor: The current word before the cursor,
+        Args:
+            words (list[str]): The input text broken into word tokens.
+            word_before_cursor (str): The current word before the cursor,
             which might be one or more blank spaces.
 
-        :rtype: bool
-        :return: Specifies whether we are currently completing the hn command.
+        Returns:
+            bool: Specifies whether we are currently completing the hn command.
         """
-        if len(words) == 1 and word_before_cursor != "":
-            return True
-        else:
-            return False
 
-    def completing_subcommand(self, words, word_before_cursor):
+        return (len(words) == 1 and word_before_cursor != "")
+
+
+    def completing_subcommand(self, words:list[str], word_before_cursor:str) -> bool:
         """Determine if we are currently completing a subcommand.
 
         :type words: list
@@ -48,14 +43,9 @@ class Completer(ClCompleter):
         :rtype: bool
         :return: Specifies whether we are currently completing a subcommand.
         """
-        if (len(words) == 1 and word_before_cursor == "") or (
-            len(words) == 2 and word_before_cursor != ""
-        ):
-            return True
-        else:
-            return False
+        return (len(words) == 1 and word_before_cursor == "") or (len(words) == 2 and word_before_cursor != "")
 
-    def completing_arg(self, words, word_before_cursor):
+    def completing_arg(self, words:list[str], word_before_cursor:str) -> bool:
         """Determine if we are currently completing an arg.
 
         :type words: list
@@ -68,28 +58,19 @@ class Completer(ClCompleter):
         :rtype: bool
         :return: Specifies whether we are currently completing an arg.
         """
-        if (len(words) == 2 and word_before_cursor == "") or (
-            len(words) == 3 and word_before_cursor != ""
-        ):
-            return True
-        else:
-            return False
+        return (len(words) == 2 and word_before_cursor == "") or (len(words) == 3 and word_before_cursor != "")
 
-    def completing_subcommand_option(self, words, word_before_cursor):
+    def completing_subcommand_option(self, words : list[str]):
         """Determine if we are currently completing an option.
 
         :type words: list
         :param words: The input text broken into word tokens.
 
-        :type word_before_cursor: str
-        :param word_before_cursor: The current word before the cursor,
-            which might be one or more blank spaces.
-
         :rtype: list
         :return: A list of options.
         """
         options = []
-        for subcommand, args_opts in ARGS_OPTS_LOOKUP.items():
+        for subcommand in ARGS_OPTS_LOOKUP.keys():
             if subcommand in words and (
                 words[-2] == subcommand
                 or self.completing_subcommand_option_util(subcommand, words)
@@ -97,7 +78,7 @@ class Completer(ClCompleter):
                 options.extend(ARGS_OPTS_LOOKUP[subcommand]["opts"])
         return options
 
-    def completing_subcommand_option_util(self, option, words):
+    def completing_subcommand_option_util(self, option : str, words :list[str]) -> bool:
         """Determine if we are currently completing an option.
 
         Called by completing_subcommand_option as a utility method.
@@ -117,22 +98,18 @@ class Completer(ClCompleter):
                 return True
         return False
 
-    def arg_completions(self, words, word_before_cursor):
+    def arg_completions(self, words:list[str]) -> list[str]:
         """Generates arguments completions based on the input.
 
         :type words: list
         :param words: The input text broken into word tokens.
-
-        :type word_before_cursor: str
-        :param word_before_cursor: The current word before the cursor,
-            which might be one or more blank spaces.
 
         :rtype: list
         :return: A list of completions.
         """
         if "hn" not in words:
             return []
-        for subcommand, args_opts in ARGS_OPTS_LOOKUP.items():
+        for subcommand in ARGS_OPTS_LOOKUP.keys():
             if subcommand in words:
                 return [ARGS_OPTS_LOOKUP[subcommand]["args"]]
         return ["10"]

@@ -1,6 +1,5 @@
 from neo_haxor_news.settings import freelancer_post_id, who_is_hiring_post_id
 
-
 FREELANCER_POST_ID = str(freelancer_post_id)
 WHO_IS_HIRING_POST_ID = str(who_is_hiring_post_id)
 SUBCOMMANDS = {
