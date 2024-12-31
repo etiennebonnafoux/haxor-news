@@ -1,21 +1,3 @@
-# -*- coding: utf-8 -*-
-
-# Copyright 2024 Bonnafoux Etienne. All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License"). You
-# may not use this file except in compliance with the License. A copy of
-# the License is located at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# or in the "license" file accompanying this file. This file is
-# distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
-# ANY KIND, either express or implied. See the License for the specific
-# language governing permissions and limitations under the License.
-
-
-
-
 import platform
 import re
 import sys
@@ -26,52 +8,52 @@ from urllib.parse import urlparse
 import html as HTMLParser
 
 from neo_haxor_news.config import Config
-from hacker_news import Haxor, HTTPError, InvalidItemID,InvalidUserID
-from neo_haxor_news.lib.pretty_date_time import pretty_date_time
+from hacker_news import Haxor, HTTPError, InvalidItemID, InvalidUserID
+from neo_haxor_news.pretty_date_time import pretty_date_time
 from neo_haxor_news.web_viewer import WebViewer
 
 
 class HackerNews(object):
     """Encapsulate Hacker News.
 
-        :type COMMENT_INDENT: str (const)
-        :param COMMENT_INDENT: The comment indent.
+    :type COMMENT_INDENT: str (const)
+    :param COMMENT_INDENT: The comment indent.
 
-        :type COMMENT_UNSEEN: str (const)
-        :param COMMENT_UNSEEN: The adornment for unseen
-            comments.
+    :type COMMENT_UNSEEN: str (const)
+    :param COMMENT_UNSEEN: The adornment for unseen
+        comments.
 
-        :type config: :class:`config.Config`
-        :param config: An instance of `config.Config`.
+    :type config: :class:`config.Config`
+    :param config: An instance of `config.Config`.
 
-        :type html: :class:`HTMLParser`
-        :param html: An instance of `HTMLParser`.
+    :type html: :class:`HTMLParser`
+    :param html: An instance of `HTMLParser`.
 
-        :type MAX_LIST_INDEX: int (const)
-        :param MAX_LIST_INDEX: The maximum 1-based index value
-            hn view will use to match item_ids.  Any value larger than
-            MAX_LIST_INDEX will result in hn view treating that index as an
-            actual post id.
+    :type MAX_LIST_INDEX: int (const)
+    :param MAX_LIST_INDEX: The maximum 1-based index value
+        hn view will use to match item_ids.  Any value larger than
+        MAX_LIST_INDEX will result in hn view treating that index as an
+        actual post id.
 
-        :type MAX_SNIPPET_LENGTH: int (const)
-        :param MAX_SNIPPET_LENGTH: The max length of a comment snippet shown
-            when filtering comments.
+    :type MAX_SNIPPET_LENGTH: int (const)
+    :param MAX_SNIPPET_LENGTH: The max length of a comment snippet shown
+        when filtering comments.
 
-        :type hacker_news_api: :class:`haxor.HackerNewsApi`
-        :param hacker_news_api: An instance of `haxor.HackerNewsApi`.
+    :type hacker_news_api: :class:`haxor.HackerNewsApi`
+    :param hacker_news_api: An instance of `haxor.HackerNewsApi`.
 
-        :type QUERY_UNSEEN: str (const)
-        :param foo: the query to show unseen comments.
+    :type QUERY_UNSEEN: str (const)
+    :param foo: the query to show unseen comments.
 
-        :type web_viewer: :class:`web_viewer.WebViewer`
-        :param web_viewer: An instance of `web_viewer.WebViewer`.
+    :type web_viewer: :class:`web_viewer.WebViewer`
+    :param web_viewer: An instance of `web_viewer.WebViewer`.
     """
 
-    COMMENT_INDENT = '  '
-    COMMENT_UNSEEN = ' [!]'
+    COMMENT_INDENT = "  "
+    COMMENT_UNSEEN = " [!]"
     MAX_LIST_INDEX = 1000
     MAX_SNIPPET_LENGTH = 60
-    QUERY_UNSEEN = '\[!\]'
+    QUERY_UNSEEN = "\[!\]"
 
     def __init__(self):
         self.hacker_news_api = Haxor()
@@ -86,8 +68,9 @@ class HackerNews(object):
         :param limit: the number of items to show, optional, defaults to 10.
         """
         self.print_items(
-            message=self.headlines_message('Ask HN'),
-            item_ids=self.hacker_news_api.ask_stories(limit))
+            message=self.headlines_message("Ask HN"),
+            item_ids=self.hacker_news_api.ask_stories(limit),
+        )
 
     def best(self, limit):
         """Display best posts.
@@ -96,8 +79,9 @@ class HackerNews(object):
         :param limit: the number of items to show, optional, defaults to 10.
         """
         self.print_items(
-            message=self.headlines_message('Best'),
-            item_ids=self.hacker_news_api.best_stories(limit))
+            message=self.headlines_message("Best"),
+            item_ids=self.hacker_news_api.best_stories(limit),
+        )
 
     def headlines_message(self, message):
         """Create the "Fetching [message] Headlines..." string.
@@ -108,7 +92,7 @@ class HackerNews(object):
         :rtype: str
         :return: "Fetching [message] Headlines...".
         """
-        return 'Fetching {0} Headlines...'.format(message)
+        return "Fetching {0} Headlines...".format(message)
 
     def hiring_and_freelance(self, regex_query, post_id):
         """Display comments matching the monthly who is hiring post.
@@ -127,9 +111,7 @@ class HackerNews(object):
         """
         try:
             item = self.hacker_news_api.get_item(post_id)
-            self.print_comments(item,
-                                regex_query,
-                                comments_hide_non_matching=True)
+            self.print_comments(item, regex_query, comments_hide_non_matching=True)
             self.config.save_cache()
         except InvalidItemID:
             self.print_item_not_found(post_id)
@@ -143,8 +125,9 @@ class HackerNews(object):
         :param limit: the number of items to show, optional, defaults to 10.
         """
         self.print_items(
-            message=self.headlines_message('Jobs'),
-            item_ids=self.hacker_news_api.job_stories(limit))
+            message=self.headlines_message("Jobs"),
+            item_ids=self.hacker_news_api.job_stories(limit),
+        )
 
     def new(self, limit):
         """Display the latest posts.
@@ -153,11 +136,13 @@ class HackerNews(object):
         :param limit: the number of items to show, optional, defaults to 10.
         """
         self.print_items(
-            message=self.headlines_message('Latest'),
-            item_ids=self.hacker_news_api.new_stories(limit))
+            message=self.headlines_message("Latest"),
+            item_ids=self.hacker_news_api.new_stories(limit),
+        )
 
-    def print_comment(self, item, regex_query='',
-                      comments_hide_non_matching=False, depth=0):
+    def print_comment(
+        self, item, regex_query="", comments_hide_non_matching=False, depth=0
+    ):
         """Print the comments for the given item.
 
         :type item: :class:`haxor.Item`
@@ -175,36 +160,41 @@ class HackerNews(object):
         """
         if item.text is None:
             return
-        header_color = 'yellow'
-        header_color_highlight = 'magenta'
-        header_adornment = ''
-        if self.config.item_cache is not None and \
-                str(item.item_id) not in self.config.item_cache:
+        header_color = "yellow"
+        header_color_highlight = "magenta"
+        header_adornment = ""
+        if (
+            self.config.item_cache is not None
+            and str(item.item_id) not in self.config.item_cache
+        ):
             header_adornment = self.COMMENT_UNSEEN
             self.config.item_cache.append(item.item_id)
         show_comment = True
         if regex_query is not None:
-            if self.match_comment_unseen(regex_query, header_adornment) or \
-                    self.match_regex(item, regex_query):
+            if self.match_comment_unseen(
+                regex_query, header_adornment
+            ) or self.match_regex(item, regex_query):
                 header_color = header_color_highlight
             else:
                 show_comment = False
         formatted_heading, formatted_comment = self.format_comment(
-            item, depth, header_color, header_adornment)
+            item, depth, header_color, header_adornment
+        )
         if show_comment:
             click.echo(formatted_heading, color=True)
             click.echo(formatted_comment, color=True)
         elif comments_hide_non_matching:
-            click.secho('.', nl=False)
+            click.secho(".", nl=False)
         else:
             click.echo(formatted_heading, color=True)
             num_chars = len(formatted_comment)
             if num_chars > self.MAX_SNIPPET_LENGTH:
                 num_chars = self.MAX_SNIPPET_LENGTH
-            click.echo(formatted_comment[0:num_chars] + ' [...]', color=True)
+            click.echo(formatted_comment[0:num_chars] + " [...]", color=True)
 
-    def print_comments(self, item, regex_query='',
-                       comments_hide_non_matching=False, depth=0):
+    def print_comments(
+        self, item, regex_query="", comments_hide_non_matching=False, depth=0
+    ):
         """Recursively print comments and subcomments for the given item.
 
         :type item: :class:`haxor.Item`
@@ -232,10 +222,11 @@ class HackerNews(object):
                     comment,
                     regex_query=regex_query,
                     comments_hide_non_matching=comments_hide_non_matching,
-                    depth=depth)
+                    depth=depth,
+                )
                 depth -= 1
             except (InvalidItemID, HTTPError):
-                click.echo('')
+                click.echo("")
                 self.print_item_not_found(comment_id)
 
     def format_comment(self, item, depth, header_color, header_adornment):
@@ -259,25 +250,30 @@ class HackerNews(object):
         """
         indent = self.COMMENT_INDENT * depth
         formatted_heading = click.style(
-            '\n{i}{b} - {d}{h}'.format(
+            "\n{i}{b} - {d}{h}".format(
                 i=indent,
                 b=item.by,
                 d=str(pretty_date_time(item.submission_time)),
-                h=header_adornment),
-            fg=header_color)
+                h=header_adornment,
+            ),
+            fg=header_color,
+        )
         unescaped_text = self.html.unescape(item.text)
-        regex_paragraph = re.compile(r'<p>')
-        unescaped_text = regex_paragraph.sub(click.style(
-            '\n\n' + indent), unescaped_text)
+        regex_paragraph = re.compile(r"<p>")
+        unescaped_text = regex_paragraph.sub(
+            click.style("\n\n" + indent), unescaped_text
+        )
         regex_url = re.compile(r'(<a href=(".*") .*</a>)')
-        unescaped_text = regex_url.sub(click.style(
-            r'\2', fg=self.config.clr_link), unescaped_text)
-        regex_tag = re.compile(r'(<(.*)>.*?<\/\2>)')
-        unescaped_text = regex_tag.sub(click.style(
-            r'\1', fg=self.config.clr_tag), unescaped_text)
-        formatted_comment = click.wrap_text(text=unescaped_text,
-                                            initial_indent=indent,
-                                            subsequent_indent=indent)
+        unescaped_text = regex_url.sub(
+            click.style(r"\2", fg=self.config.clr_link), unescaped_text
+        )
+        regex_tag = re.compile(r"(<(.*)>.*?<\/\2>)")
+        unescaped_text = regex_tag.sub(
+            click.style(r"\1", fg=self.config.clr_tag), unescaped_text
+        )
+        formatted_comment = click.wrap_text(
+            text=unescaped_text, initial_indent=indent, subsequent_indent=indent
+        )
         return formatted_heading, formatted_comment
 
     def format_index_title(self, index, title):
@@ -294,11 +290,11 @@ class HackerNews(object):
         :return: The formatted index and title.
         """
         INDEX_PAD = 5
-        formatted_index = '  ' + (str(index) + '.').ljust(INDEX_PAD)
-        formatted_index_title = click.style(formatted_index,
-                                            fg=self.config.clr_view_index)
-        formatted_index_title += click.style(title + ' ',
-                                             fg=self.config.clr_title)
+        formatted_index = "  " + (str(index) + ".").ljust(INDEX_PAD)
+        formatted_index_title = click.style(
+            formatted_index, fg=self.config.clr_view_index
+        )
+        formatted_index_title += click.style(title + " ", fg=self.config.clr_title)
         return formatted_index_title
 
     def format_item(self, item, index):
@@ -317,20 +313,21 @@ class HackerNews(object):
         formatted_item = self.format_index_title(index, item.title)
         if item.url is not None:
             netloc = urlparse(item.url).netloc
-            netloc = re.sub('www.', '', netloc)
-            formatted_item += click.style('(' + netloc + ')',
-                                          fg=self.config.clr_view_link)
-        formatted_item += '\n         '
-        formatted_item += click.style(str(item.score) + ' points ',
-                                      fg=self.config.clr_num_points)
-        formatted_item += click.style('by ' + item.by + ' ',
-                                      fg=self.config.clr_user)
+            netloc = re.sub("www.", "", netloc)
+            formatted_item += click.style(
+                "(" + netloc + ")", fg=self.config.clr_view_link
+            )
+        formatted_item += "\n         "
+        formatted_item += click.style(
+            str(item.score) + " points ", fg=self.config.clr_num_points
+        )
+        formatted_item += click.style("by " + item.by + " ", fg=self.config.clr_user)
         submission_time = str(pretty_date_time(item.submission_time))
-        formatted_item += click.style(submission_time + ' ',
-                                      fg=self.config.clr_time)
-        num_comments = str(item.descendants) if item.descendants else '0'
-        formatted_item += click.style('| ' + num_comments + ' comments',
-                                      fg=self.config.clr_num_comments)
+        formatted_item += click.style(submission_time + " ", fg=self.config.clr_time)
+        num_comments = str(item.descendants) if item.descendants else "0"
+        formatted_item += click.style(
+            "| " + num_comments + " comments", fg=self.config.clr_num_comments
+        )
         return formatted_item
 
     def print_item_not_found(self, item_id):
@@ -339,7 +336,7 @@ class HackerNews(object):
         :type item_id: int
         :param item_id: The item's id.
         """
-        click.secho('Item with id {0} not found.'.format(item_id), fg='red')
+        click.secho("Item with id {0} not found.".format(item_id), fg="red")
 
     def print_items(self, message, item_ids):
         """Print the items.
@@ -366,7 +363,7 @@ class HackerNews(object):
                 self.print_item_not_found(item_id)
         self.config.save_cache()
         if self.config.show_tip:
-            click.secho(self.tip_view(str(index-1)))
+            click.secho(self.tip_view(str(index - 1)))
 
     def tip_view(self, max_index):
         """Create the tip about the view command.
@@ -378,16 +375,17 @@ class HackerNews(object):
         :rtype: str
         :return: The formatted tip.
         """
-        tip = click.style('  Tip: View the page or comments for ',
-                          fg=self.config.clr_tooltip)
-        tip += click.style('1 through ', fg=self.config.clr_view_index)
+        tip = click.style(
+            "  Tip: View the page or comments for ", fg=self.config.clr_tooltip
+        )
+        tip += click.style("1 through ", fg=self.config.clr_view_index)
         tip += click.style(str(max_index), fg=self.config.clr_view_index)
-        tip += click.style(' with the following command:\n',
-                           fg=self.config.clr_tooltip)
-        tip += click.style('    hn view [#] ', fg=self.config.clr_view_index)
-        tip += click.style(('optional: [-c] [-cr] [-cu] [-cq "regex"] [-ch]'
-                            ' [-b] [--help]' + '\n'),
-                           fg=self.config.clr_tooltip)
+        tip += click.style(" with the following command:\n", fg=self.config.clr_tooltip)
+        tip += click.style("    hn view [#] ", fg=self.config.clr_view_index)
+        tip += click.style(
+            ('optional: [-c] [-cr] [-cu] [-cq "regex"] [-ch]' " [-b] [--help]" + "\n"),
+            fg=self.config.clr_tooltip,
+        )
         return tip
 
     def match_comment_unseen(self, regex_query, header_adornment):
@@ -402,8 +400,7 @@ class HackerNews(object):
         :rtype: bool
         :return: Specifies if there is a match found.
         """
-        if regex_query == self.QUERY_UNSEEN and \
-                header_adornment == self.COMMENT_UNSEEN:
+        if regex_query == self.QUERY_UNSEEN and header_adornment == self.COMMENT_UNSEEN:
             return True
         else:
             return False
@@ -420,9 +417,7 @@ class HackerNews(object):
         :rtype: bool
         :return: Specifies if there is a match found.
         """
-        match_time = re.search(
-            regex_query,
-            str(pretty_date_time(item.submission_time)))
+        match_time = re.search(regex_query, str(pretty_date_time(item.submission_time)))
         match_user = re.search(regex_query, item.by)
         match_text = re.search(regex_query, item.text)
         if not match_text and not match_user and not match_time:
@@ -437,8 +432,9 @@ class HackerNews(object):
         :param limit: the number of items to show, optional, defaults to 10.
         """
         self.print_items(
-            message=self.headlines_message('Show HN'),
-            item_ids=self.hacker_news_api.show_stories(limit))
+            message=self.headlines_message("Show HN"),
+            item_ids=self.hacker_news_api.show_stories(limit),
+        )
 
     def top(self, limit):
         """Display the top posts.
@@ -447,8 +443,9 @@ class HackerNews(object):
         :param limit: the number of items to show, optional, defaults to 10.
         """
         self.print_items(
-            message=self.headlines_message('Top'),
-            item_ids=self.hacker_news_api.top_stories(limit))
+            message=self.headlines_message("Top"),
+            item_ids=self.hacker_news_api.top_stories(limit),
+        )
 
     def user(self, user_id, submission_limit):
         """Display basic user info and submitted posts.
@@ -462,19 +459,19 @@ class HackerNews(object):
         """
         try:
             user = self.hacker_news_api.get_user(user_id)
-            click.secho('\nUser Id: ', nl=False, fg=self.config.clr_general)
+            click.secho("\nUser Id: ", nl=False, fg=self.config.clr_general)
             click.secho(user_id, fg=self.config.clr_user)
-            click.secho('Created: ', nl=False, fg=self.config.clr_general)
+            click.secho("Created: ", nl=False, fg=self.config.clr_general)
             click.secho(str(user.created), fg=self.config.clr_user)
-            click.secho('Karma: ', nl=False, fg=self.config.clr_general)
+            click.secho("Karma: ", nl=False, fg=self.config.clr_general)
             click.secho(str(user.karma), fg=self.config.clr_user)
-            self.print_items('User submissions:',
-                             user.submitted[0:submission_limit])
+            self.print_items("User submissions:", user.submitted[0:submission_limit])
         except InvalidUserID:
             self.print_item_not_found(user_id)
 
-    def view(self, index, comments_query, comments,
-             comments_hide_non_matching, browser):
+    def view(
+        self, index, comments_query, comments, comments_hide_non_matching, browser
+    ):
         """View the given index contents.
 
         Uses ids from ~/.haxornewsconfig stored in self.config.item_ids.
@@ -497,32 +494,33 @@ class HackerNews(object):
         :param browser: determines whether to view the url in a browser.
         """
         if self.config.item_ids is None:
-            click.secho('There are no posts indexed, run a command such as '
-                        'hn top first',
-                        fg='red')
+            click.secho(
+                "There are no posts indexed, run a command such as " "hn top first",
+                fg="red",
+            )
             return
         item_id = index
         if index < self.MAX_LIST_INDEX:
             try:
-                item_id = self.config.item_ids[index-1]
+                item_id = self.config.item_ids[index - 1]
             except IndexError:
                 self.print_item_not_found(item_id)
                 return
         try:
             item = self.hacker_news_api.get_item(item_id)
         except InvalidItemID:
-            self.print_item_not_found(self.config.item_ids[index-1])
+            self.print_item_not_found(self.config.item_ids[index - 1])
             return
         if not comments and item.url is None:
-            click.secho('\nNo url associated with post.',
-                        nl=False,
-                        fg=self.config.clr_general)
+            click.secho(
+                "\nNo url associated with post.", nl=False, fg=self.config.clr_general
+            )
             comments = True
         if comments:
-            comments_url = ('https://news.ycombinator.com/item?id=' +
-                            str(item.item_id))
-            click.secho('\nFetching Comments from ' + comments_url,
-                        fg=self.config.clr_general)
+            comments_url = "https://news.ycombinator.com/item?id=" + str(item.item_id)
+            click.secho(
+                "\nFetching Comments from " + comments_url, fg=self.config.clr_general
+            )
             if browser:
                 webbrowser.open(comments_url)
             else:
@@ -530,42 +528,56 @@ class HackerNews(object):
                     self.print_comments(
                         item,
                         regex_query=comments_query,
-                        comments_hide_non_matching=comments_hide_non_matching)
-                    click.echo('')
+                        comments_hide_non_matching=comments_hide_non_matching,
+                    )
+                    click.echo("")
                 except IOError:
                     sys.stderr.close()
                 self.config.save_cache()
         else:
-            click.secho('\nOpening ' + item.url + ' ...',
-                        fg=self.config.clr_general)
+            click.secho("\nOpening " + item.url + " ...", fg=self.config.clr_general)
             if browser:
                 webbrowser.open(item.url)
             else:
                 contents = self.web_viewer.generate_url_contents(item.url)
-                header = click.style('Viewing ' + item.url + '\n\n',
-                                     fg=self.config.clr_general)
+                header = click.style(
+                    "Viewing " + item.url + "\n\n", fg=self.config.clr_general
+                )
                 contents = header + contents
-                contents += click.style(('\nView this article in a browser with'
-                                         ' the -b/--browser flag.\n'),
-                                        fg=self.config.clr_general)
-                contents += click.style(('\nPress q to quit viewing this '
-                                         'article.\n'),
-                                        fg=self.config.clr_general)
-                if platform.system() == 'Windows':
+                contents += click.style(
+                    (
+                        "\nView this article in a browser with"
+                        " the -b/--browser flag.\n"
+                    ),
+                    fg=self.config.clr_general,
+                )
+                contents += click.style(
+                    ("\nPress q to quit viewing this " "article.\n"),
+                    fg=self.config.clr_general,
+                )
+                if platform.system() == "Windows":
                     try:
                         # Strip out Unicode, which seems to have issues on
                         # Windows
-                        contents = re.sub(r'[^\x00-\x7F]+', '', contents)
+                        contents = re.sub(r"[^\x00-\x7F]+", "", contents)
                         click.echo(contents)
                     except IOError:
                         sys.stderr.close()
                 else:
                     click.echo_via_pager(contents)
-            click.echo('')
+            click.echo("")
 
-    def view_setup(self, index, comments_regex_query, comments,
-                   comments_recent, comments_unseen,
-                   comments_hide_non_matching, clear_cache, browser):
+    def view_setup(
+        self,
+        index,
+        comments_regex_query,
+        comments,
+        comments_recent,
+        comments_unseen,
+        comments_hide_non_matching,
+        clear_cache,
+        browser,
+    ):
         """Set up the call to view the given index comments or url.
 
         This method is meant to be called after a command that outputs a
@@ -604,15 +616,17 @@ class HackerNews(object):
         if comments_regex_query is not None:
             comments = True
         if comments_recent:
-            comments_regex_query = 'seconds ago|minutes ago'
+            comments_regex_query = "seconds ago|minutes ago"
             comments = True
         if comments_unseen:
             comments_regex_query = self.QUERY_UNSEEN
             comments = True
         if clear_cache:
             self.config.clear_item_cache()
-        self.view(int(index),
-                  comments_regex_query,
-                  comments,
-                  comments_hide_non_matching,
-                  browser)
+        self.view(
+            int(index),
+            comments_regex_query,
+            comments,
+            comments_hide_non_matching,
+            browser,
+        )

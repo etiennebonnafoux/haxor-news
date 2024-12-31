@@ -1,50 +1,31 @@
-# -*- coding: utf-8 -*-
-
-# Copyright 2024 Bonnafoux Etienne. All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License"). You
-# may not use this file except in compliance with the License. A copy of
-# the License is located at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# or in the "license" file accompanying this file. This file is
-# distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
-# ANY KIND, either express or implied. See the License for the specific
-# language governing permissions and limitations under the License.
-
-
-
-
 from datetime import datetime
 
 
 def pretty_date_time(date_time):
-    """Print a pretty datetime similar to what's seen on Hacker News.
+    """Print the date in friendly format
+    Adapted from: http://stackoverflow.com/questions/1551382/user-friendly-time-format-in-python
 
-    Gets a datetime object or a int() Epoch timestamp and return a
-    pretty string like 'an hour ago', 'Yesterday', '3 months ago',
-    'just now', etc.
+    Args:
+        date_time (_type_): The date
 
-    Adapted from: http://stackoverflow.com/questions/1551382/user-friendly-time-format-in-python  # NOQA
-
-    :type foo: :class:`datetime.datetime`
-    :param foo: An instance of `datetime.datetime`.
-
-    :rtype: str
-    :return: the pretty datetime.
+    Returns:
+       str: A friendly format date
     """
+
     now = datetime.now()
-    if type(date_time) is int:
+
+    if isinstance(date_time, int):
         diff = now - datetime.fromtimestamp(date_time)
     elif isinstance(date_time, datetime):
         diff = now - date_time
     elif not date_time:
         diff = now - now
+
     second_diff = diff.seconds
     day_diff = diff.days
+
     if day_diff < 0:
-        return ''
+        return ""
     if day_diff == 0:
         if second_diff < 10:
             return "just now"

@@ -43,28 +43,30 @@ class StyleFactory(object):
         try:
             style = pygments.styles.get_style_by_name(name)
         except ClassNotFound:
-            style = pygments.styles.get_style_by_name('native')
+            style = pygments.styles.get_style_by_name("native")
 
         # Create styles dictionary.
         styles = {}
         styles.update(style.styles)
-        styles.update({
-            Token.Menu.Completions.Completion.Current: 'bg:#00aaaa #000000',
-            Token.Menu.Completions.Completion: 'bg:#008888 #ffffff',
-            Token.Menu.Completions.Meta.Current: 'bg:#00aaaa #000000',
-            Token.Menu.Completions.Meta: 'bg:#00aaaa #ffffff',
-            Token.Menu.Completions.ProgressButton: 'bg:#003333',
-            Token.Menu.Completions.ProgressBar: 'bg:#00aaaa',
-            Token.Scrollbar: 'bg:#00aaaa',
-            Token.Scrollbar.Button: 'bg:#003333',
-            Token.Toolbar: 'bg:#222222 #cccccc',
-            Token.Toolbar.Off: 'bg:#222222 #696969',
-            Token.Toolbar.On: 'bg:#222222 #ffffff',
-            Token.Toolbar.Search: 'noinherit bold',
-            Token.Toolbar.Search.Text: 'nobold',
-            Token.Toolbar.System: 'noinherit bold',
-            Token.Toolbar.Arg: 'noinherit bold',
-            Token.Toolbar.Arg.Text: 'nobold'
-        })
+        styles.update(
+            {
+                Token.Menu.Completions.Completion.Current: "bg:#00aaaa #000000",
+                Token.Menu.Completions.Completion: "bg:#008888 #ffffff",
+                Token.Menu.Completions.Meta.Current: "bg:#00aaaa #000000",
+                Token.Menu.Completions.Meta: "bg:#00aaaa #ffffff",
+                Token.Menu.Completions.ProgressButton: "bg:#003333",
+                Token.Menu.Completions.ProgressBar: "bg:#00aaaa",
+                Token.Scrollbar: "bg:#00aaaa",
+                Token.Scrollbar.Button: "bg:#003333",
+                Token.Toolbar: "bg:#222222 #cccccc",
+                Token.Toolbar.Off: "bg:#222222 #696969",
+                Token.Toolbar.On: "bg:#222222 #ffffff",
+                Token.Toolbar.Search: "noinherit bold",
+                Token.Toolbar.Search.Text: "nobold",
+                Token.Toolbar.System: "noinherit bold",
+                Token.Toolbar.Arg: "noinherit bold",
+                Token.Toolbar.Arg.Text: "nobold",
+            }
+        )
 
         return Style.from_dict(styles)

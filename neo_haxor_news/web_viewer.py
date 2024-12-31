@@ -1,19 +1,5 @@
 # coding: utf-8
 
-# -*- coding: utf-8 -*-
-
-# Copyright 2024 Bonnafoux Etienne. All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License"). You
-# may not use this file except in compliance with the License. A copy of
-# the License is located at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# or in the "license" file accompanying this file. This file is
-# distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
-# ANY KIND, either express or implied. See the License for the specific
-# language governing permissions and limitations under the License.
 
 import re
 
@@ -58,34 +44,29 @@ class WebViewer(object):
         :rtype: str
         :return: The input `text`, formatted.
         """
-        pattern_url_name = r'[^]]*'
-        pattern_url_link = r'[^)]+'
-        pattern_url = r'([!]*\[{0}]\(\s*{1}\s*\))'.format(
-            pattern_url_name,
-            pattern_url_link)
+        pattern_url_name = r"[^]]*"
+        pattern_url_link = r"[^)]+"
+        pattern_url = r"([!]*\[{0}]\(\s*{1}\s*\))".format(
+            pattern_url_name, pattern_url_link
+        )
         regex_url = re.compile(pattern_url)
-        text = regex_url.sub(click.style(r'\1', fg='green'), text)
-        pattern_url_ref_name = r'[^]]*'
-        pattern_url_ref_link = r'[^]]+'
-        pattern_url_ref = r'([!]*\[{0}]\[\s*{1}\s*\])'.format(
-            pattern_url_ref_name,
-            pattern_url_ref_link)
+        text = regex_url.sub(click.style(r"\1", fg="green"), text)
+        pattern_url_ref_name = r"[^]]*"
+        pattern_url_ref_link = r"[^]]+"
+        pattern_url_ref = r"([!]*\[{0}]\[\s*{1}\s*\])".format(
+            pattern_url_ref_name, pattern_url_ref_link
+        )
         regex_url_ref = re.compile(pattern_url_ref)
-        text = regex_url_ref.sub(click.style(r'\1', fg='green'),
-                                 text)
-        regex_list = re.compile(r'(  \*.*)')
-        text = regex_list.sub(click.style(r'\1', fg='cyan'),
-                              text)
-        regex_header = re.compile(r'(#+) (.*)')
-        text = regex_header.sub(click.style(r'\2', fg='yellow'),
-                                text)
-        regex_bold = re.compile(r'(\*\*|__)(.*?)\1')
-        text = regex_bold.sub(click.style(r'\2', fg='cyan'),
-                              text)
-        regex_code = re.compile(r'(`)(.*?)\1')
-        text = regex_code.sub(click.style(r'\1\2\1', fg='cyan'),
-                              text)
-        text = re.sub(r'(\s*\r?\n\s*){2,}', r'\n\n', text)
+        text = regex_url_ref.sub(click.style(r"\1", fg="green"), text)
+        regex_list = re.compile(r"(  \*.*)")
+        text = regex_list.sub(click.style(r"\1", fg="cyan"), text)
+        regex_header = re.compile(r"(#+) (.*)")
+        text = regex_header.sub(click.style(r"\2", fg="yellow"), text)
+        regex_bold = re.compile(r"(\*\*|__)(.*?)\1")
+        text = regex_bold.sub(click.style(r"\2", fg="cyan"), text)
+        regex_code = re.compile(r"(`)(.*?)\1")
+        text = regex_code.sub(click.style(r"\1\2\1", fg="cyan"), text)
+        text = re.sub(r"(\s*\r?\n\s*){2,}", r"\n\n", text)
         return text
 
     def generate_url_contents(self, url):
@@ -101,17 +82,18 @@ class WebViewer(object):
         :return: The string representation of the formatted url contents.
         """
         try:
-            headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}  # NOQA
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36"
+            }  # NOQA
             raw_response = requests.get(url, headers=headers)
-        except (requests.exceptions.SSLError,
-                requests.exceptions.ConnectionError) as e:
-            contents = 'Error: ' + str(e) + '\n'
-            contents += 'Try running hn view # with the --browser/-b flag\n'
+        except (requests.exceptions.SSLError, requests.exceptions.ConnectionError) as e:
+            contents = "Error: " + str(e) + "\n"
+            contents += "Try running hn view # with the --browser/-b flag\n"
             return contents
         text = raw_response.text
         contents = self.html_to_text.handle(text)
         # Strip out Unicode, which seems to have issues when html2txt is
         # coupled with click.echo_via_pager.
-        contents = re.sub(r'[^\x00-\x7F]+', '', contents)
+        contents = re.sub(r"[^\x00-\x7F]+", "", contents)
         contents = self.format_markdown(contents)
         return contents

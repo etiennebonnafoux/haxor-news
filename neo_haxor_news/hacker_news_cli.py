@@ -1,21 +1,3 @@
-# -*- coding: utf-8 -*-
-
-# Copyright 2024 Bonnafoux Etienne. All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License"). You
-# may not use this file except in compliance with the License. A copy of
-# the License is located at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# or in the "license" file accompanying this file. This file is
-# distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
-# ANY KIND, either express or implied. See the License for the specific
-# language governing permissions and limitations under the License.
-
-
-
-
 import click
 
 from neo_haxor_news.hacker_news import HackerNews
@@ -42,7 +24,7 @@ class HackerNewsCli(object):
         ctx.obj = HackerNews()
 
     @cli.command()
-    @click.argument('limit', required=False, default=10)
+    @click.argument("limit", required=False, default=10)
     @pass_hacker_news
     def ask(hacker_news, limit):
         """Display Ask HN posts.
@@ -61,7 +43,7 @@ class HackerNewsCli(object):
         hacker_news.ask(limit)
 
     @cli.command()
-    @click.argument('limit', required=False, default=10)
+    @click.argument("limit", required=False, default=10)
     @pass_hacker_news
     def best(hacker_news, limit):
         """Display the best posts of the past few days.
@@ -80,8 +62,8 @@ class HackerNewsCli(object):
         hacker_news.best(limit)
 
     @cli.command()
-    @click.argument('regex_query', required=False)
-    @click.option('-i', '--id_post', required=False, default=0)
+    @click.argument("regex_query", required=False)
+    @click.option("-i", "--id_post", required=False, default=0)
     @pass_hacker_news
     def freelance(hacker_news, regex_query, id_post):
         """Display comments from the seeking freelancer posts.
@@ -118,8 +100,8 @@ class HackerNewsCli(object):
         hacker_news.hiring_and_freelance(regex_query, id_post)
 
     @cli.command()
-    @click.argument('regex_query', required=False)
-    @click.option('-i', '--id_post', required=False, default=0)
+    @click.argument("regex_query", required=False)
+    @click.option("-i", "--id_post", required=False, default=0)
     @pass_hacker_news
     def hiring(hacker_news, regex_query, id_post):
         """Display comments from the who is hiring posts.
@@ -156,7 +138,7 @@ class HackerNewsCli(object):
         hacker_news.hiring_and_freelance(regex_query, id_post)
 
     @cli.command()
-    @click.argument('limit', required=False, default=10)
+    @click.argument("limit", required=False, default=10)
     @pass_hacker_news
     def jobs(hacker_news, limit):
         """Display job posts.
@@ -175,7 +157,7 @@ class HackerNewsCli(object):
         hacker_news.jobs(limit)
 
     @cli.command()
-    @click.argument('limit', required=False, default=10)
+    @click.argument("limit", required=False, default=10)
     @pass_hacker_news
     def new(hacker_news, limit):
         """Display the latest posts.
@@ -194,7 +176,7 @@ class HackerNewsCli(object):
         hacker_news.new(limit)
 
     @cli.command()
-    @click.argument('limit', required=False, default=10)
+    @click.argument("limit", required=False, default=10)
     @pass_hacker_news
     def show(hacker_news, limit):
         """Display Show HN posts.
@@ -213,7 +195,7 @@ class HackerNewsCli(object):
         hacker_news.show(limit)
 
     @cli.command()
-    @click.argument('limit', required=False, default=10)
+    @click.argument("limit", required=False, default=10)
     @pass_hacker_news
     def top(hacker_news, limit):
         """Display the top recent posts.
@@ -232,8 +214,8 @@ class HackerNewsCli(object):
         hacker_news.top(limit)
 
     @cli.command()
-    @click.argument('user_id')
-    @click.option('-l', '--limit', required=False, default=10)
+    @click.argument("user_id")
+    @click.option("-l", "--limit", required=False, default=10)
     @pass_hacker_news
     def user(hacker_news, user_id, limit):
         """Display basic user info and submitted posts.
@@ -255,18 +237,26 @@ class HackerNewsCli(object):
         hacker_news.user(user_id, limit)
 
     @cli.command()
-    @click.argument('index')
-    @click.option('-cq', '--comments_regex_query', required=False, default=None)
-    @click.option('-c', '--comments', is_flag=True)
-    @click.option('-cr', '--comments_recent', is_flag=True)
-    @click.option('-cu', '--comments_unseen', is_flag=True)
-    @click.option('-b', '--browser', is_flag=True)
-    @click.option('-cc', '--clear_cache', is_flag=True)
-    @click.option('-ch', '--comments_hide_non_matching', is_flag=True)
+    @click.argument("index")
+    @click.option("-cq", "--comments_regex_query", required=False, default=None)
+    @click.option("-c", "--comments", is_flag=True)
+    @click.option("-cr", "--comments_recent", is_flag=True)
+    @click.option("-cu", "--comments_unseen", is_flag=True)
+    @click.option("-b", "--browser", is_flag=True)
+    @click.option("-cc", "--clear_cache", is_flag=True)
+    @click.option("-ch", "--comments_hide_non_matching", is_flag=True)
     @pass_hacker_news
-    def view(hacker_news, index, comments_regex_query, comments,
-             comments_recent, comments_unseen,
-             comments_hide_non_matching, clear_cache, browser):
+    def view(
+        hacker_news,
+        index,
+        comments_regex_query,
+        comments,
+        comments_recent,
+        comments_unseen,
+        comments_hide_non_matching,
+        clear_cache,
+        browser,
+    ):
         """View the post index or id, hn view --help.
 
         Example(s):
@@ -338,13 +328,15 @@ class HackerNewsCli(object):
         try:
             post_index = int(index)
         except ValueError:
-            click.secho('Error: Expected an integer post index', fg='red')
+            click.secho("Error: Expected an integer post index", fg="red")
         else:
-            hacker_news.view_setup(post_index,
-                                   comments_regex_query,
-                                   comments,
-                                   comments_recent,
-                                   comments_unseen,
-                                   comments_hide_non_matching,
-                                   clear_cache,
-                                   browser)
+            hacker_news.view_setup(
+                post_index,
+                comments_regex_query,
+                comments,
+                comments_recent,
+                comments_unseen,
+                comments_hide_non_matching,
+                clear_cache,
+                browser,
+            )
