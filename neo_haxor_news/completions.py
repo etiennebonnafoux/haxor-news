@@ -25,7 +25,6 @@ SUBCOMMANDS = {
     'hiring': "Monthly hiring post",
     'jobs': 'Jobs posts',
     'new': 'Newest posts',
-    'onion': 'Onion posts',
     'show': 'Show HN posts',
     'top': 'Top posts',
     'user': 'User info',

@@ -10,3 +10,8 @@ dependencies = [
     "pygments>=2.18.0",
     "requests>=2.32.3",
 ]
+
+[dependency-groups]
+dev = [
+    "mock>=5.1.0",
+]

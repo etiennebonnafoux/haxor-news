@@ -93,13 +93,6 @@ class HackerNewsTest(unittest.TestCase):
             message=self.hn.headlines_message('Latest'),
             item_ids=self.hn.hacker_news_api.new_stories(self.limit))
 
-    @mock.patch('haxor_news.hacker_news.HackerNews.format_index_title')
-    @mock.patch('haxor_news.hacker_news.click')
-    def test_onion(self, mock_click, mock_format_index_title):
-        self.hn.onion(self.limit)
-        assert len(mock_format_index_title.mock_calls) == self.limit
-        assert mock_click.mock_calls
-
     @mock.patch('haxor_news.hacker_news.HackerNews.print_items')
     def test_show(self, mock_print_items):
         self.hn.show(self.limit)

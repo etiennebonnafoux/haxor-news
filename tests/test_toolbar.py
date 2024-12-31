@@ -15,7 +15,7 @@
 
 
 
-from tests.compat import unittest
+import unittest
 
 from pygments.token import Token
 

@@ -17,7 +17,7 @@
 from __future__ import division
 
 import mock
-from tests.compat import unittest
+import unittest
 
 from click.testing import CliRunner
 
@@ -72,13 +72,6 @@ class HackerNewsCliTest(unittest.TestCase):
     @mock.patch('haxor_news.hacker_news_cli.HackerNews.new')
     def test_new(self, mock_hn_call):
         result = self.runner.invoke(self.hacker_news_cli.cli, ['new'])
-        mock_hn_call.assert_called_with(self.limit)
-        assert result.exit_code == 0
-
-    @mock.patch('haxor_news.hacker_news_cli.HackerNews.onion')
-    def test_onion(self, mock_hn_call):
-        result = self.runner.invoke(
-            self.hacker_news_cli.cli, ['onion', str(self.limit)])
         mock_hn_call.assert_called_with(self.limit)
         assert result.exit_code == 0
 

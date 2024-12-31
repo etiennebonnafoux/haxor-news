@@ -18,7 +18,7 @@ from __future__ import unicode_literals
 from __future__ import division
 
 import mock
-from tests.compat import unittest
+import unittest
 
 from prompt_toolkit.document import Document
 

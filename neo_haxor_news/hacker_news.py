@@ -29,7 +29,6 @@ from .config import Config
 from .lib.haxor.haxor import HackerNewsApi, HTTPError, InvalidItemID, \
     InvalidUserID
 from .lib.pretty_date_time import pretty_date_time
-from .onions import onions
 from .web_viewer import WebViewer
 
 
@@ -157,21 +156,6 @@ class HackerNews(object):
         self.print_items(
             message=self.headlines_message('Latest'),
             item_ids=self.hacker_news_api.new_stories(limit))
-
-    def onion(self, limit):
-        """Display onions.
-
-        :type limit: int
-        :param limit: the number of items to show, optional, defaults to 10.
-        """
-        click.secho('\n{h}\n'.format(h=self.headlines_message('Top Onion')),
-                    fg=self.config.clr_title)
-        index = 1
-        for onion in onions[0:limit]:
-            formatted_index_title = self.format_index_title(index, onion)
-            click.echo(formatted_index_title)
-            index += 1
-        click.echo('')
 
     def print_comment(self, item, regex_query='',
                       comments_hide_non_matching=False, depth=0):

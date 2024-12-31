@@ -1,5 +1,3 @@
-![Imgur](http://i.imgur.com/C4mkc3L.gif)
-
 [![Build Status](https://travis-ci.org/donnemartin/haxor-news.svg?branch=master)](https://travis-ci.org/donnemartin/haxor-news)
 
 [![PyPI version](https://badge.fury.io/py/haxor-news.svg)](http://badge.fury.io/py/haxor-news) [![PyPI](https://img.shields.io/pypi/pyversions/haxor-news.svg)](https://pypi.python.org/pypi/haxor-news/) [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
@@ -22,7 +20,6 @@ Check out the `haxor-news` discussion in this [Hacker News post](https://news.yc
 * Post Linked Web Content
 * Monthly Hiring and Freelancers Posts
 * User Info
-* Onions
 
 `haxor-news` helps you **filter the large number of comments that popular posts generate**.
 
@@ -68,7 +65,6 @@ Combine `haxor-news` with pipes, redirects, and other command line utilities.  O
 * [View and Filter the Monthly Freelancer Post](#filter-the-monthly-hiring-post)
 * [Combine With Pipes and Redirects](#combine-with-pipes-and-redirects)
 * [View User Info](#view-user-info)
-* [View Onions](#view-onions)
 * [View Results in a Browser](#view-in-a-browser)
 * [Windows Support](#windows-support)
 
@@ -134,7 +130,7 @@ For no color, set the value(s) to `None`.
 
 ## View Posts
 
-View the Top, Best, Show, Ask, Jobs, New, and Onion posts.
+View the Top, Best, Show, Ask, Jobs and New.
 
 Usage:
 
@@ -301,13 +297,6 @@ Usage:
 
 ![Imgur](http://i.imgur.com/oTALQQI.png)
 
-## View Onions
-
-Usage:
-
-    $ hn onion [limit]  # post limit default: all
-
-![Imgur](http://i.imgur.com/MubWRNG.png)
 
 ## View in a Browser
 

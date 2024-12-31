@@ -194,25 +194,6 @@ class HackerNewsCli(object):
         hacker_news.new(limit)
 
     @cli.command()
-    @click.argument('limit', required=False, default=50)
-    @pass_hacker_news
-    def onion(hacker_news, limit):
-        """Display onions.
-
-        Example(s):
-            hn onion
-            hn onion 10
-
-        :type hacker_news: :class:`hacker_news.HackerNews`
-        :param hacker_news: An instance of `hacker_news.HackerNews`.
-
-        :type limit: int
-        :param limit: specifies the number of items to show.
-            Optional, defaults to 10.
-        """
-        hacker_news.onion(limit)
-
-    @cli.command()
     @click.argument('limit', required=False, default=10)
     @pass_hacker_news
     def show(hacker_news, limit):

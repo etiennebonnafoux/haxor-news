@@ -17,7 +17,7 @@
 from __future__ import division
 
 import os
-from tests.compat import unittest
+import unittest
 
 from neo_haxor_news.hacker_news import HackerNews
 from neo_haxor_news.settings import freelancer_post_id, who_is_hiring_post_id

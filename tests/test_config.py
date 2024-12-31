@@ -18,7 +18,7 @@ from __future__ import division
 
 import mock
 import os
-from tests.compat import unittest
+import unittest
 
 from neo_haxor_news.hacker_news import HackerNews
 from tests.mock_hacker_news_api import MockHackerNewsApi

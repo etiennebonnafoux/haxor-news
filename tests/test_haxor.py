@@ -19,7 +19,7 @@ from __future__ import division
 import mock
 import platform
 
-from tests.compat import unittest
+import unittest
 
 from neo_haxor_news.haxor import Haxor
 
