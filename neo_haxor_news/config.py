@@ -1,10 +1,12 @@
 import os
+from pathlib import Path
 
 import click
 import configparser
 from urllib.request import urlretrieve
 from urllib.error import URLError
 from neo_haxor_news.settings import freelancer_post_id, who_is_hiring_post_id
+from collections.abc import Callable
 
 
 class Config:
@@ -120,40 +122,37 @@ class Config:
         self.item_cache = []
         self.save_cache()
 
-    def get_config_path(self, config_file_name):
+    def get_config_path(self, config_file_name: str) -> str:
         """Get the config file path.
 
-        :type config_file_name: str
-        :param config_file_name: The config file name.
+        Args:
+            config_file_name (str): The config file name.
 
-        :rtype: str
-        :return: The config file path.
+        Returns:
+            str: The config file path.
         """
-        home = os.path.abspath(os.environ.get("HOME", ""))
+        home = Path.home()
         config_file_path = os.path.join(home, config_file_name)
         return config_file_path
 
-    def load_config(self, config_funcs):
+    def load_config(self, config_funcs: list[Callable]):
         """Load the specified config from ~/.haxornewsconfig.
 
-        :type config_funcs: list
-        :param config_funcs: The config functions to run.
+        Args:
+            config_funcs (list[Callable]): The config functions to run.
         """
         config_file_path = self.get_config_path(self.CONFIG)
         parser = configparser.RawConfigParser()
         try:
             with open(config_file_path) as config_file:
-                try:
-                    parser.read_file(config_file)
-                except AttributeError:
-                    parser.readfp(config_file)
-                for config_func in config_funcs:
-                    config_func(parser)
+                parser.read_file(config_file)
         except IOError:
             # There might not be a cache yet, just silently return.
             return None
+        for config_func in config_funcs:
+            config_func(parser)
 
-    def load_config_colors(self, parser):
+    def load_config_colors(self, parser: configparser.RawConfigParser):
         """Load the color config from ~/.haxornewsconfig.
 
         :type parser: :class:`ConfigParser.RawConfigParser`
@@ -161,7 +160,9 @@ class Config:
         """
         self.load_colors(parser)
 
-    def load_config_hiring_and_freelance_ids(self, parser):
+    def load_config_hiring_and_freelance_ids(
+        self, parser: configparser.RawConfigParser
+    ):
         """Load the hiring and freelance ids from ~/.haxornewsconfig.
 
         :type parser: :class:`ConfigParser.RawConfigParser`
@@ -170,7 +171,7 @@ class Config:
         self.hiring_id = parser.getint(self.CONFIG_SECTION, self.CONFIG_HIRING_ID)
         self.freelance_id = parser.getint(self.CONFIG_SECTION, self.CONFIG_FREELANCE_ID)
 
-    def load_config_item_cache(self, parser):
+    def load_config_item_cache(self, parser: configparser.RawConfigParser):
         """Load the item cache from ~/.haxornewsconfig.
 
         :type parser: :class:`ConfigParser.RawConfigParser`
@@ -178,7 +179,7 @@ class Config:
         """
         self.item_cache = self.load_section_list(parser, self.CONFIG_CACHE)
 
-    def load_config_item_ids(self, parser):
+    def load_config_item_ids(self, parser: configparser.RawConfigParser):
         """Load the item ids from ~/.haxornewsconfig.
 
         :type parser: :class:`ConfigParser.RawConfigParser`
@@ -186,7 +187,7 @@ class Config:
         """
         self.item_ids = self.load_section_list(parser, self.CONFIG_IDS)
 
-    def load_config_show_tip(self, parser):
+    def load_config_show_tip(self, parser: configparser.RawConfigParser):
         """Load the show tip config from ~/.haxornewsconfig.
 
         :type parser: :class:`ConfigParser.RawConfigParser`
@@ -194,7 +195,9 @@ class Config:
         """
         self.show_tip = parser.getboolean(self.CONFIG_SECTION, self.CONFIG_SHOW_TIP)
 
-    def load_color(self, parser, color_config, default):
+    def load_color(
+        self, parser: configparser.RawConfigParser, color_config: str, default: str
+    ):
         """Load the specified color from ~/.haxornewsconfig.
 
         :type parser: :class:`ConfigParser.RawConfigParser`
@@ -217,7 +220,7 @@ class Config:
             return default
         return color
 
-    def load_colors(self, parser):
+    def load_colors(self, parser: configparser.RawConfigParser):
         """Load all colors from ~/.haxornewsconfig.
 
         :type parser: :class:`ConfigParser.RawConfigParser`
@@ -281,7 +284,7 @@ class Config:
             default=self.clr_view_index,
         )
 
-    def load_hiring_and_freelance_ids(self, url=None):
+    def load_hiring_and_freelance_ids(self, url: str | None = None):
         """Load the latest who's hiring and freelancer post ids.
 
         The latest ids are updated monthly on the repo and are then cached.
@@ -293,7 +296,7 @@ class Config:
         :param url: The url to load the latest post ids.
         """
         try:
-            if url is None:
+            if not url:
                 url = "https://raw.githubusercontent.com/donnemartin/haxor-news/master/haxor_news/settings.py"  # NOQA
             file_name = "downloaded_settings.py"
             urlretrieve(url, file_name)
@@ -319,7 +322,7 @@ class Config:
             self.hiring_id = who_is_hiring_post_id
             self.freelance_id = freelancer_post_id
 
-    def load_section_list(self, parser, section):
+    def load_section_list(self, parser: configparser.RawConfigParser, section: str):
         """Load the given section containing a list from ~/.haxornewsconfig.
 
         :type parser: :class:`ConfigParser.RawConfigParser`

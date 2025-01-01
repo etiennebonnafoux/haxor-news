@@ -256,7 +256,7 @@ class HackerNewsTest(unittest.TestCase):
     def test_print_item_not_found(self, mock_click):
         self.hn.print_item_not_found(self.invalid_id)
         mock_click.secho.assert_called_with(
-            "Item with id {0} not found.".format(self.invalid_id), fg="red"
+            f"Item with id {self.invalid_id} not found.", fg="red"
         )
 
     @mock.patch("haxor_news.hacker_news.click")

@@ -2,20 +2,22 @@ import platform
 import re
 import sys
 import webbrowser
-
-import click
-from urllib.parse import urlparse
 from html import unescape
 from typing import Iterable
+from urllib.parse import urlparse
 
-from neo_haxor_news.config import Config
+import click
 from hackernews import (
-    Item,
     HackerNews as ImportHackerNews,
+)
+from hackernews import (
     HTTPError,
     InvalidItemID,
     InvalidUserID,
+    Item,
 )
+
+from neo_haxor_news.config import Config
 from neo_haxor_news.pretty_date_time import pretty_date_time
 from neo_haxor_news.web_viewer import WebViewer
 
@@ -264,12 +266,7 @@ class HackerNews:
         """
         indent = self.COMMENT_INDENT * depth
         formatted_heading = click.style(
-            "\n{i}{b} - {d}{h}".format(
-                i=indent,
-                b=item.by,
-                d=str(pretty_date_time(item.submission_time)),
-                h=header_adornment,
-            ),
+            f"\n{indent}{item.by} - {str(pretty_date_time(item.submission_time))}{header_adornment}",
             fg=header_color,
         )
         unescaped_text = unescape(item.text)
@@ -350,7 +347,7 @@ class HackerNews:
         :type item_id: int
         :param item_id: The item's id.
         """
-        click.secho("Item with id {0} not found.".format(item_id), fg="red")
+        click.secho(f"Item with id {item_id} not found.", fg="red")
 
     def print_items(self, item_ids: Iterable[Item]):
         """Print the items.
@@ -398,7 +395,7 @@ class HackerNews:
         )
         return tip
 
-    def match_comment_unseen(self, regex_query:str, header_adornment:str)-> bool:
+    def match_comment_unseen(self, regex_query: str, header_adornment: str) -> bool:
         """Determine if a comment is unseen based on the query and header.
 
         :type regex_query: str
@@ -415,7 +412,7 @@ class HackerNews:
         else:
             return False
 
-    def match_regex(self, item:Item, regex_query:str)-> bool:
+    def match_regex(self, item: Item, regex_query: str) -> bool:
         """Determine if there is a match with the given regex_query.
 
         :type item: :class:`haxor.Item`
@@ -435,7 +432,7 @@ class HackerNews:
         else:
             return True
 
-    def show(self, limit:int):
+    def show(self, limit: int):
         """Display Show HN posts.
 
         :type limit: int
@@ -473,7 +470,7 @@ class HackerNews:
             click.secho(str(user.created), fg=self.config.clr_user)
             click.secho("Karma: ", nl=False, fg=self.config.clr_general)
             click.secho(str(user.karma), fg=self.config.clr_user)
-            self.print_items( user.submitted[0:submission_limit])
+            self.print_items(user.submitted[0:submission_limit])
         except InvalidUserID:
             self.print_item_not_found(user_id)
 

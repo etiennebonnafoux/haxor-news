@@ -1,8 +1,16 @@
 from neo_haxor_news.settings import freelancer_post_id, who_is_hiring_post_id
+from dataclasses import dataclass
+
+
+@dataclass
+class OptsLookup:
+    args: str
+    opts: list[str]
+
 
 FREELANCER_POST_ID = str(freelancer_post_id)
 WHO_IS_HIRING_POST_ID = str(who_is_hiring_post_id)
-SUBCOMMANDS = {
+SUBCOMMANDS: dict[str, str] = {
     "ask": "Ask HN posts",
     "best": "Best of HN weekly posts",
     "freelance": "Monthly freelancers post",
@@ -14,31 +22,31 @@ SUBCOMMANDS = {
     "user": "User info",
     "view": "View specified post",
 }
-ARGS_OPTS_LOOKUP = {
-    "freelance": {
-        "args": '"(?i)(Python|Django)"',
-        "opts": [
+ARGS_OPTS_LOOKUP: dict[str, OptsLookup] = {
+    "freelance": OptsLookup(
+        '"(?i)(Python|Django)"',
+        [
             "--id_post " + FREELANCER_POST_ID,
             "-i " + FREELANCER_POST_ID,
         ],
-    },
-    "hiring": {
-        "args": '"(?i)(Python|Django)"',
-        "opts": [
+    ),
+    "hiring": OptsLookup(
+        '"(?i)(Python|Django)"',
+        [
             "--id_post " + WHO_IS_HIRING_POST_ID,
             "-i " + WHO_IS_HIRING_POST_ID,
         ],
-    },
-    "user": {
-        "args": '"user"',
-        "opts": [
+    ),
+    "user": OptsLookup(
+        '"user"',
+        [
             "--limit 10",
             "-l 10",
         ],
-    },
-    "view": {
-        "args": "1",
-        "opts": [
+    ),
+    "view": OptsLookup(
+        "1",
+        [
             '--comments_regex_query ""',
             '-cq ""',
             "--comments",
@@ -54,9 +62,9 @@ ARGS_OPTS_LOOKUP = {
             "--browser",
             "-b",
         ],
-    },
+    ),
 }
-META_LOOKUP = {
+META_LOOKUP: dict[str, str] = {
     "10": "limit: int (opt) limits the posts displayed",
     '"(?i)(Python|Django)"': (
         "regex_query: string (opt) applies a regular " "expression comment filter"

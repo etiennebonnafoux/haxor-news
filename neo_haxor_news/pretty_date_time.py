@@ -1,12 +1,12 @@
 from datetime import datetime
 
 
-def pretty_date_time(date_time):
+def pretty_date_time(date_time: int | datetime | None):
     """Print the date in friendly format
     Adapted from: http://stackoverflow.com/questions/1551382/user-friendly-time-format-in-python
 
     Args:
-        date_time (_type_): The date
+        date_time (int|datetime|None): The date
 
     Returns:
        str: A friendly format date

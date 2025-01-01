@@ -4,17 +4,16 @@ import subprocess
 import sys
 
 import click
-from prompt_toolkit import PromptSession
+from prompt_toolkit import PromptSession, layout
 from prompt_toolkit.application import Application
+from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from prompt_toolkit.filters import Always
-from prompt_toolkit import layout
+from prompt_toolkit.history import FileHistory
 from prompt_toolkit.layout import Layout
 from prompt_toolkit.layout.containers import Window
-from prompt_toolkit.history import FileHistory
-from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 
 from neo_haxor_news.__init__ import __version__
-from neo_haxor_news.completer import Completer
+from neo_haxor_news.completer import CustomCompleter
 from neo_haxor_news.hacker_news_cli import HackerNewsCli
 from neo_haxor_news.keys import KeyManager
 from neo_haxor_news.style import StyleFactory
@@ -88,7 +87,7 @@ class Haxor:
         self.paginate_comments = True
         self.hacker_news_cli = HackerNewsCli()
         self.text_utils = TextUtils()
-        self.completer = Completer(fuzzy_match=False, text_utils=self.text_utils)
+        self.completer = CustomCompleter(fuzzy_match=False, text_utils=self.text_utils)
         self._create_cli()
         if platform.system() == "Windows":
             self.CMDS_ENABLE_PAGINATE.append("view")

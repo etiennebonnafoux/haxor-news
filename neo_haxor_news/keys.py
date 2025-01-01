@@ -1,5 +1,7 @@
 from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.keys import Keys
+from collections.abc import Callable
+from prompt_toolkit.key_binding.key_processor import KeyPressEvent
 
 
 class KeyManager:
@@ -14,23 +16,21 @@ class KeyManager:
         KeyBindingManager`.
     """
 
-    def __init__(self, set_paginate_comments, get_paginate_comments):
-        self.manager = None
+    def __init__(
+        self, set_paginate_comments: Callable, get_paginate_comments: Callable
+    ):
+        self.manager: KeyBindings | None = None
         self._create_key_manager(set_paginate_comments, get_paginate_comments)
 
-    def _create_key_manager(self, set_paginate_comments, get_paginate_comments):
+    def _create_key_manager(
+        self, set_paginate_comments: Callable, get_paginate_comments: Callable
+    ):
         """Create and initialize the keybinding manager.
 
-        :type set_paginate_comments: callable
-        :param set_paginate_comments: Sets the paginate comments config.
+        Args:
+            set_paginate_comments (Callable): Sets the paginate comments config.
+            get_paginate_comments (Callable): Gets the paginate comments config.
 
-        :type get_paginate_comments: callable
-        :param get_paginate_comments: Gets the paginate comments config.
-
-        :rtype: :class:`prompt_toolkit.key_binding.manager.
-            KeyBindingManager`
-        :return: An instance of `prompt_toolkit.key_binding.manager.
-            KeyBindingManager`.
         """
         assert callable(set_paginate_comments)
         assert callable(get_paginate_comments)
@@ -42,10 +42,8 @@ class KeyManager:
 
             This method is currently disabled.
 
-            :type _: :class:`prompt_toolkit.Event`
-            :param _: (Unused)
-
-            :raises: :class:`EOFError` to quit the app.
+            Args:
+                _ (_): Unused Event
             """
             # set_paginate_comments(not get_paginate_comments())
             pass
@@ -54,15 +52,16 @@ class KeyManager:
         def handle_f10(_):
             """Quit when the `F10` key is pressed.
 
-            :type _: :class:`prompt_toolkit.Event`
-            :param _: (Unused)
+            Args:
+                _ (_): The event unused
 
-            :raises: :class:`EOFError` to quit the app.
+            Raises:
+                EOFError: `EOFError` to quit the app.
             """
             raise EOFError
 
         @self.manager.add(Keys.ControlSpace)
-        def handle_ctrl_space(event):
+        def handle_ctrl_space(event: KeyPressEvent):
             """Initialize autocompletion at the cursor.
 
             If the autocompletion menu is not showing, display it with the
@@ -70,11 +69,11 @@ class KeyManager:
 
             If the menu is showing, select the next completion.
 
-            :type event: :class:`prompt_toolkit.Event`
-            :param event: An instance of `prompt_toolkit.Event`.
+            Args:
+                event (KeyPressEvent): An instance of `KeyPressEvent`
             """
-            b = event.cli.current_buffer
+            b = event.current_buffer
             if b.complete_state:
                 b.complete_next()
             else:
-                event.cli.start_completion(select_first=False)
+                b.start_completion(select_first=False)

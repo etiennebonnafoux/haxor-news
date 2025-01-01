@@ -9,23 +9,16 @@ import requests
 
 
 class WebViewer:
-    """Handle viewing of web content within the terminal.
+    """Handle viewing of web content within the terminal."""
 
-    :type html: :class:`HTMLParser.HTMLParser`
-    :param html: An instance of `HTMLParser.HTMLParser`.
-
-    :type html_to_text: :class:`html2text.html2text.HTML2Text`
-    :param html_to_text: An instance of `html2text.html2text.HTML2Text`.
-    """
-
-    def format_markdown(self, text):
+    def format_markdown(self, text: str) -> str:
         """Add color to the input markdown using click.style.
 
-        :type text: str
-        :param text: The markdown text.
+        Args:
+            text (str): The markdown text.
 
-        :rtype: str
-        :return: The input `text`, formatted.
+        Returns:
+            str: The input `text`, formatted.
         """
         pattern_url_name = r"[^]]*"
         pattern_url_link = r"[^)]+"
@@ -52,22 +45,22 @@ class WebViewer:
         text = re.sub(r"(\s*\r?\n\s*){2,}", r"\n\n", text)
         return text
 
-    def generate_url_contents(self, url):
+    def generate_url_contents(self, url: str) -> str:
         """Generate the formatted contents of the given item's url.
 
         Converts the HTML to text using HTML2Text, colors it, then displays
             the output in a pager.
 
-        :type url: str
-        :param url: The url whose contents to fetch.
+        Args:
+            url (str): The url whose contents to fetch.
 
-        :rtype: str
-        :return: The string representation of the formatted url contents.
+        Returns:
+            str: The string representation of the formatted url contents.
         """
         try:
             headers = {
                 "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36"
-            } 
+            }
             raw_response = requests.get(url, headers=headers)
         except (requests.exceptions.SSLError, requests.exceptions.ConnectionError) as e:
             contents = "Error: " + str(e) + "\n"

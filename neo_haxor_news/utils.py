@@ -1,9 +1,7 @@
-from typing import Iterable
-
-
 import re
-
 import shlex
+from collections.abc import Generator, Iterable
+
 from prompt_toolkit.completion import Completion
 
 from neo_haxor_news.completions import META_LOOKUP
@@ -12,7 +10,7 @@ from neo_haxor_news.completions import META_LOOKUP
 class TextUtils:
     """Utilities for parsing and matching text."""
 
-    def find_matches(self, word: str, collection: Iterable[str], fuzzy: bool):
+    def find_matches(self, word: str, collection: Iterable[Completion], fuzzy: bool):
         """Find all matches in collection for word.
 
         :type word: str
@@ -28,66 +26,70 @@ class TextUtils:
         :return: Yields an instance of `prompt_toolkit.completion.Completion`.
         """
         word = self._last_token(word).lower()
-        for suggestion in self._find_collection_matches(word, collection, fuzzy):
+        for suggestion in self._find_collection_matches(
+            word, [compl.text for compl in collection], fuzzy
+        ):
             yield suggestion
-
-    def get_tokens(self, text):
-        """Parse out all tokens.
+        """
 
         :type text: str
-        :param text: A string to be split into tokens.
+        :param text: 
 
         :rtype: list
-        :return: A list of strings for each word in the text.
+        :return: 
+        """
+
+    def get_tokens(self, text: str) -> list[str]:
+        """Parse out all tokens.
+
+        Args:
+            text (str): A string to be split into tokens.
+
+        Returns:
+            list[str]: A list of strings for each word in the text.
         """
         if text is not None:
             text = text.strip()
-            words = self._safe_split(text)
+            words = shlex.split(text)
             return words
         return []
 
-    def _last_token(self, text):
+    def _last_token(self, text: str) -> str:
         """Find the last word in text.
 
-        :type text: str
-        :param text: A string to parse and obtain the last word.
+        Args:
+            text (str): A string to parse and obtain the last word.
 
-        :rtype: str
-        :return: The last word in the text.
+        Returns:
+            str: The last word in the text.
         """
         if text is not None:
             text = text.strip()
             if len(text) > 0:
-                word = self._safe_split(text)[-1]
+                word = shlex.split(text)[-1]
                 word = word.strip()
                 return word
         return ""
 
-    def _fuzzy_finder(self, text, collection, case_sensitive=True):
+    def _fuzzy_finder(
+        self, text: str, collection: Iterable[str], case_sensitive: bool = True
+    ) -> Generator[str, None, None]:
         """Customized fuzzy finder with optional case-insensitive matching.
 
         Adapted from: https://github.com/amjith/fuzzyfinder.
 
-        :type text: str
-        :param text: Input string entered by user.
+        Args:
+            text (str): Input string entered by user.
+            collection (Iterable[str]): collection of strings which will be filtered based
+            case_sensitive (bool, optional): Determines whether the find will be case. Defaults to True.
 
-        :type collection: iterable
-        :param collection: collection of strings which will be filtered based
-            on the input `text`.
-
-        :type case_sensitive: bool
-        :param case_sensitive: Determines whether the find will be case
-            sensitive.
-
-        :rtype: generator
-        :return: Yields a list of suggestions narrowed down from `collections`
+        Yields:
+            Generator[str, None, None]: Yields a list of suggestions narrowed down from `collections`
             using the `text` input.
         """
+
         suggestions = []
-        if case_sensitive:
-            pat = ".*?".join(map(re.escape, text))
-        else:
-            pat = ".*?".join(map(re.escape, text.lower()))
+        pat = ".*?".join([re.escape(ch) for ch in text])
         regex = re.compile(pat)
         for item in collection:
             if case_sensitive:
@@ -98,20 +100,18 @@ class TextUtils:
                 suggestions.append((len(r.group()), r.start(), item))
         return (z for _, _, z in sorted(suggestions))
 
-    def _find_collection_matches(self, word, collection, fuzzy):
+    def _find_collection_matches(
+        self, word: str, collection: Iterable[str], fuzzy: bool
+    ) -> Generator[Completion, None, None]:
         """Yield all matching names in list.
 
-        :type word: str
-        :param word: The word before the cursor.
+        Args:
+            word (str): The word before the cursor.
+            collection (Iterable[str]): A collection of words to match.
+            fuzzy (bool): Determines whether to use fuzzy matching.
 
-        :type collection: iterable
-        :param collection: A collection of words to match.
-
-        :type fuzzy: bool
-        :param fuzzy: Determines whether to use fuzzy matching.
-
-        :rtype: generator
-        :return: Yields an instance of `prompt_toolkit.completion.Completion`.
+        Yields:
+            Completion: Yields an instance of `prompt_toolkit.completion.Completion`.
         """
         word = word.lower()
         if fuzzy:
@@ -129,31 +129,3 @@ class TextUtils:
                     yield Completion(
                         name, -len(word), display=display, display_meta=display_meta
                     )
-
-    def _shlex_split(self, text):
-        """Wrapper for shlex, because it does not seem to handle unicode in 2.6.
-
-        :type text: str
-        :param text: A string to split.
-
-        :rtype: list
-        :return: A list that contains words for each split element of text.
-        """
-        return shlex.split(text)
-
-    def _safe_split(self, text):
-        """Safely splits the input text.
-
-        Shlex can't always split. For example, "\" crashes the completer.
-
-        :type text: str
-        :param text: A string to split.
-
-        :rtype: list
-        :return: A list that contains words for each split element of text.
-        """
-        try:
-            words = self._shlex_split(text)
-            return words
-        except:
-            return text
